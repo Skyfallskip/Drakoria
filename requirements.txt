@@ -1,0 +1,12 @@
+graphviz==0.21
+greenlet==3.2.4
+httplib2==0.30.0
+mysql-conector-python==0.1.8
+pillow==11.3.0
+plantuml==0.3.0
+pygame==2.6.1
+pyparsing==3.2.3
+pyscroll==2.31
+PyTMX==3.32
+SQLAlchemy==2.0.43
+typing_extensions==4.15.0

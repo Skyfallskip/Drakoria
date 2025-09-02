@@ -1,0 +1,11 @@
+Metadata-Version: 2.4
+Name: mysql-conector-python
+Version: 0.1.8
+Summary: My asyncio-like library
+Author: Ваше имя
+Author-email: email@example.com
+Requires-Python: >=3.6
+Dynamic: author
+Dynamic: author-email
+Dynamic: requires-python
+Dynamic: summary
