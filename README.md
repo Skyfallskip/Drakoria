@@ -14,3 +14,5 @@ Em python, foram utilizadas as blibiotecas:
 - SQLAlchemy
 - alembic
 - pillow
+
+O mapa do jogo foi feito utilizando o Azgaar's Fantasy Map Generator, Convertido para o pytmx usando o Tiled Map Editor
