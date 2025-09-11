@@ -8,3 +8,6 @@ Por enquanto vou montar no LDtk, mais facil
 Percebi que demora muito, vou mudar o estilo e talvez mudar o uml totalmente
 
 Vou utilizar um sample do LDTK devido ao tempo
+
+
+Mudança de ideia, depois de ver alguns tutoriais, percebi que é extremamente fácil fazer sprites e decidi usar o TME (Tiled Map Editor)
