@@ -1,0 +1,13 @@
+{
+    "maps": [
+        {
+            "fileName": "Tutorial_1.tmx",
+            "height": 1600,
+            "width": 1600,
+            "x": 0,
+            "y": 0
+        }
+    ],
+    "onlyShowAdjacentMaps": false,
+    "type": "world"
+}
