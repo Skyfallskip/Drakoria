@@ -1,0 +1,10 @@
+Testando diferentes game engines pra fazer um mapa, sendo elas: RPG Maker MZ estilo Top-Down; LDtk estilo plataformer e Tiled Map Editor que eu acho muito complicado
+
+Aparentemente RPG maker faz o jogo sozinho entao nao posso usa so ele...
+Tenho que basicamente "roubar" os sprites do rpg maker e usar no tiled..... e depois montar a logica no pygame
+Por enquanto vou montar no LDtk, mais facil
+É bem legal mas tem que baixar tilesets
+
+Percebi que demora muito, vou mudar o estilo e talvez mudar o uml totalmente
+
+Vou utilizar um sample do LDTK devido ao tempo
