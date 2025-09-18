@@ -1,0 +1,1 @@
+import mysql.connector # Lib pra conectar com o mysql

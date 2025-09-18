@@ -1,45 +1,50 @@
 #Loop principal
-import pygame
-import pyldtk
+import pygame # Lib principal 
 import sys
+from core import mapa, database, uis  # Importa os libs personalizadas do jogo
 
+background = pygame.Surface((800, 600))
+background.fill(pygame.Color('#000000'))
 
+# Loop Principal
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((800, 600))
+
+    screen = pygame.display.set_mode((1280 ,720),)
     pygame.display.set_caption("Drakoria RPG")
+    #pygame.display.set_icon()
 
-    # Carregue o projeto LDtk
-    project = pyldtk.LdtkProject("Drakoria_GitRepo/game/maps/Sample.ldtk")
-    level = project.levels[0]  # Pega o primeiro nível
-
-    # Exemplo: mostrar informações do nível
-    print("Nome do nível:", level.identifier)
-    print("Tamanho:", level.width, "x", level.height)
-    print("Camadas:", [layer.identifier for layer in level.layer_instances])
+    estado = "inicial"
+    telas = {
+        "inicial": TelaInicial(),
+        "loading": TelaLoading(),
+        "principal": TelaPrincipal()
+    }
 
     clock = pygame.time.Clock()
     running = True
 
-    while running:
+    while estado != 'sair':
+
+        time_delta = clock.tick(60)/1000.0 # Controla o FPS do jogo
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                estado = 'sair'
 
-        screen.fill((0, 0, 0))
+            uis.ui_manager.process_events(event)
 
-        # Aqui você pode desenhar o mapa manualmente
-        # Exemplo: desenhar tiles de uma camada
-        # layer = level.layer_instances[0]
-        # for tile in layer.grid_tiles:
-        #     # Você precisa carregar o tileset e usar tile.src_x, tile.src_y, tile.px, tile.py
-        #     pass
+        uis.ui_manager.update(time_delta)
 
-        pygame.display.flip()
-        clock.tick(60)
+        window_surface.blit(background, (0, 0))
+        uis.ui_manager.draw_ui(window_surface)
+
+        pygame.display.update()
 
     pygame.quit()
     sys.exit()
+# Fim
 
 if __name__ == "__main__":
     main()
+# Inicia o loop principal assim que o arquivo main.py é executado    
