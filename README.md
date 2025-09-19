@@ -11,6 +11,3 @@ Em python, foram utilizadas as blibiotecas:
 - pytmx
 - pyscroll
 - mysql-connector-python
-- SQLAlchemy
-- alembic
-- pillow
