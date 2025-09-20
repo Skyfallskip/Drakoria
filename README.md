@@ -7,7 +7,8 @@ Ele é um trabalho conjunto de 3 disciplinas: Banco de dados I, Modelagem de dad
 
 Em python, foram utilizadas as blibiotecas:
 
-- pygame
-- pytmx
-- pyscroll
-- mysql-connector-python
+- arcade
+- pillow
+- SQLAlchemy
+
+Entre outras.

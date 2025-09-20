@@ -1,0 +1,9 @@
+20/09/2025
+
+Comecei fazendo o banco de dados no sqlalchemy, percebi que nao ha necessidade de utilizar um sgbd como o mysql em um projeto desse tamanho.
+
+Aparentemente ao usar json como tipo de atributo eu simplifico mais da metade do meu diagrama de classes
+
+Finalizei o db em sqlalchemy, agora passar pro lucid chart porque minha licença no star uml acabou...
+
+Finalizei o diagrama de Classes, tentar finalizar os outros diagramas amanha!

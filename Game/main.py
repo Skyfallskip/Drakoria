@@ -11,3 +11,4 @@ from Core import Combat_Handler as CH
 
 
 def main():
+    print('hello world')
