@@ -1,0 +1,7 @@
+22/09/2025
+
+Fiz um modelo inicial do diagrama de Casos de uso novo, vou adicionar as funções como pass no codigo no bd...
+
+Primerio PR do projeto
+
+Terminei de colocar as funções em uma nova pasta services, a fim de reduzir o tamanho do models.py!
