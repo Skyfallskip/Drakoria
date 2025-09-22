@@ -1,14 +1,26 @@
 # Drakoria
-Trabalho final do 2° ano do curso de informática no ISEPAM
 
-Ele é um trabalho conjunto de 3 disciplinas: Banco de dados I, Modelagem de dados II e Linguagem da programação II;
+Projeto final do 2º ano do curso técnico em Informática no ISEPAM.
 
-É um jogo de RPG singleplayer feito em python.
+Este trabalho integra três disciplinas:
 
-Em python, foram utilizadas as blibiotecas:
+Banco de Dados I
 
-- arcade
-- pillow
+Modelagem de Dados II
+
+Linguagem de Programação II
+
+Drakoria é um RPG singleplayer desenvolvido em Python, com foco em aprendizado e aplicação prática de conceitos de programação, modelagem e persistência de dados.
+
+Tecnologias utilizadas
+
+- Arcade
+ → para a parte gráfica e loop do jogo
+ 
+- Pillow
+ → manipulação de imagens e sprites
+
 - SQLAlchemy
+ → mapeamento objeto-relacional e gerenciamento do banco de dados
 
-Entre outras.
+Outras bibliotecas auxiliares
