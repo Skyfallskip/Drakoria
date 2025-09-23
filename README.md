@@ -24,3 +24,17 @@ Tecnologias utilizadas
  → mapeamento objeto-relacional e gerenciamento do banco de dados
 
 Outras bibliotecas auxiliares
+
+Ferramentas Utilizadas
+
+- Lucid Chart
+-> Ferramenta para montar o diagrama de Casos de Uso
+
+- Visual Paradigm
+-> Ferramenta utilizada para modelar o diagrama de sequencias e o diagrama de Classes
+
+- Tiled Map Editor
+-> Ferramenta utilizada para montar o mapa do jogo em tmx
+
+- Azgaar's Fantasy Map Generator
+-> Utilizado para gerar o mapa conceitual do jogo
