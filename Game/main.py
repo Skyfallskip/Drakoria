@@ -1,14 +1,22 @@
-#Imports
-
 import arcade as arc
-
-#funções do core
-from Core import User_Interface as UI 
-#from Core import Inventory_Handler as IH
-from Core import Player_Handler as PH
-from Core import Movement_Handler as MH
-from Core import Combat_Handler as CH
-
+from Game.Core.Views import GameView
+from Game.Core.Views import screen_width, screen_height, screen_title
 
 def main():
-    print('hello world')
+    """ Main function """
+
+    window = arc.Window(screen_width, screen_height, screen_title)
+
+
+    game = GameView()
+    game.setup()
+
+
+    window.show_view(game)
+
+
+    arc.run()
+
+
+if __name__ == "__main__":
+    main()
