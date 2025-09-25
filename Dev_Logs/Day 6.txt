@@ -1,1 +1,4 @@
+25/09/2025
+// Pietro
 
+- Fiz alguns casos de uso estendidos, baseados no Diagrama de Casos de Uso feito anteriormente, seguindo o template realizado no inicio desse projeto.
