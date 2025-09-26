@@ -1,0 +1,9 @@
+26/09/2025
+
+// Mateus
+
+- Vou começar refazendo a tela inicial, apos isso planejo começar a codar as telas. Se der tempo vou começar a fazer sprites e trabalhar no mapa ou nos personagens
+
+- Devido a forças maiores que as minhas (Py arcade é muito dificil), o projeto agora passara a ser feito com pygame
+
+- Fiz a tela do menu inicial no pygame, acabei perdendo muito tempo com o arcade e nao consegui ver a tela de criaçao de personagem nem os sprite :v 

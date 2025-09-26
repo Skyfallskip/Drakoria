@@ -1,22 +1,33 @@
-import arcade as arc
-from Game.Core.Views import GameView
-from Game.Core.Views import screen_width, screen_height, screen_title
+import pygame
+from Core.Views import Main_Menu
 
-def main():
-    """ Main function """
+# Inicializa o pygame
+pygame.init()
 
-    window = arc.Window(screen_width, screen_height, screen_title)
+# Configura a tela
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Drakoria")
 
+# Cores (Temporarias ate eu achar uma solução melhor)
+GRAY = (128, 128, 128)
+BLACK = (0, 0, 0)
+ORANGE = (255, 165, 0)
+BROWN = (139, 69, 19)
+WHITE = (255, 255, 255)
 
-    game = GameView()
-    game.setup()
+# Loop principal do pygame
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
 
+    # Carrega a view do menu principal
+    Main_Menu(screen, screen_width, screen_height, GRAY, BLACK, ORANGE, WHITE)
 
-    window.show_view(game)
+    pygame.display.flip()
 
-
-    arc.run()
-
-
-if __name__ == "__main__":
-    main()
+# Sai do pygame
+pygame.quit()

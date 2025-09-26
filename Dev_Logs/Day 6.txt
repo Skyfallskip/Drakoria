@@ -2,3 +2,7 @@
 // Pietro
 
 - Fiz alguns casos de uso estendidos, baseados no Diagrama de Casos de Uso feito anteriormente, seguindo o template realizado no inicio desse projeto.
+
+// Mateus
+
+- Fiz as telas do jogo, por enquanto nada permanente apenas pra eu ter uma ideia
