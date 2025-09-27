@@ -1,0 +1,6 @@
+27/09/2025
+
+// Mateus
+
+Fiz os sprites pra parte inicial do mapa, ainda falta fazer as casas e os personagens e npcs.
+Comecei o mapa, a print ta la no tiled map stuff, junto com os sprites
