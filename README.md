@@ -14,7 +14,7 @@ Drakoria é um RPG singleplayer desenvolvido em Python, com foco em aprendizado 
 
 Tecnologias utilizadas
 
-- Arcade
+- Pygame
  → para a parte gráfica e loop do jogo
  
 - Pillow
@@ -38,3 +38,6 @@ Ferramentas Utilizadas
 
 - Azgaar's Fantasy Map Generator
 -> Utilizado para gerar o mapa conceitual do jogo
+
+- Piskel
+-> Site para a criação e edição de Sprites
