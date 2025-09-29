@@ -1,0 +1,7 @@
+29/09/2025
+
+//Mateus
+
+Refazendo a UI, atualmente to refazendo a parte do inventario e juntando: Inventario, status, equipamentos, skills, quests e configurações em uma ui só.
+
+Terminei a parte do inventario. Fiz o mini mapa  
