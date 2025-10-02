@@ -1,0 +1,9 @@
+02/10/2025
+
+// Mateus
+
+Fiz grande parte do backend, agora o jogo "Funciona", provavelmente vou refazer tudo pra otimar
+
+// Pietro
+
+Tela de loading, os arcos nas 4 direções e pro slot, caixa de dialogo e a flecha
