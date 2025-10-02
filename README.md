@@ -2,6 +2,8 @@
 
 Projeto final do 2º ano do curso técnico em Informática no ISEPAM.
 
+Versão atual: 0.0.1
+
 Este trabalho integra três disciplinas:
 
 - Banco de Dados I

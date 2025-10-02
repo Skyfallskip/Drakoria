@@ -2,7 +2,7 @@
 
 // Mateus
 
-Fiz grande parte do backend, agora o jogo "Funciona", provavelmente vou refazer tudo pra otimar
+Fiz grande parte do backend, agora o jogo "Funciona", provavelmente vou refazer tudo pra otimar.
 
 // Pietro
 
