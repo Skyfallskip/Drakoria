@@ -3,7 +3,6 @@ import os
 from Core.Map_Renderer import render_maps
 from Core.UIs_Handler import draw_game_ui, load_ui_images
 from Core.Buttons_Logic import Button
-from Core.Camera_Handler import Camera
 
 pygame.font.init()
 

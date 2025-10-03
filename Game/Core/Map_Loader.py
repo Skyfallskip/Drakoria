@@ -24,6 +24,8 @@ def load_world_maps(world_file):
 
     return loaded_maps
 
+
+#Acha o tile de spawn
 def find_spawn_tile(maps):
     for m in maps:
         tmx = m["tmx"]

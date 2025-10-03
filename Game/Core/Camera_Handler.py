@@ -6,10 +6,11 @@ class Camera:
         self.y = y
 
     def apply(self, target_x, target_y):
-        # Center the camera on the target (player)
+        # Centraliza a camera no jogador
         self.x = target_x - self.screen_width // 2
         self.y = target_y - self.screen_height // 2
         return self.x, self.y
 
+    #Atualiza a posicao da camera com base na posicao do jogador
     def update(self, player):
         self.x, self.y = self.apply(player.x, player.y)

@@ -28,13 +28,13 @@ game_state = STATE_MAIN_MENU
 
 player = Player(0, 0, r"Tiled_Map_Editor_Stuff\Tilesets_png\Caracters\Human-Worker-Red.png")
 camera = Camera(screen_width, screen_height, 0, 0)
-maps = None  # Will be loaded when game starts
+maps = None  # Carrega os mapas apenas quando o jogo começa
 
 # Loop principal do pygame
 running = True
 clock = pygame.time.Clock()
 while running:
-    screen.fill(GRAY)  # Always clear the screen
+    screen.fill(GRAY)  # Limpa a tela
 
     # Desenha o menu ou o jogo a cada frame
     if game_state == STATE_MAIN_MENU:
@@ -57,7 +57,7 @@ while running:
 
         if game_state == STATE_MAIN_MENU:
             if start_btn.is_clicked(event):
-                # Load maps only once when starting the game
+                # Carrega os mapas quando o jogo começa
                 maps = load_world_maps(r"C:\Users\User\Desktop\Drakoria\Drakoria\Tiled_Map_Editor_Stuff\World\Zones.world")
                 print("Loaded maps:", len(maps))
                 spawn_x, spawn_y = find_spawn_tile(maps)
