@@ -27,6 +27,11 @@ except:
 def Main_Menu(screen, width, height, text_color, button_color):
         # Plano de fundo
 
+        background = pygame.image.load(r"Game\Assets\Images\Main_Menu_Backgrond.png")
+
+        background = pygame.transform.scale(background, (width, height))
+        screen.blit(background, (0, 0))
+
         # Titulo do jogo
         title_text = font_title.render("Drakoria", True, text_color)
         title_rect = title_text.get_rect(center=(width // 2, height // 4))
@@ -35,7 +40,7 @@ def Main_Menu(screen, width, height, text_color, button_color):
         # Dimensões dos botões
         button_width = 150
         button_height = 50
-        button_y = height // 2
+        button_y = 500
         button_spacing = 50
 
         # Posições dos botões
@@ -52,6 +57,7 @@ def Main_Menu(screen, width, height, text_color, button_color):
         start_button.draw(screen)
         settings_button.draw(screen)
         exit_button.draw(screen)
+
 
 
         return start_button, settings_button, exit_button
