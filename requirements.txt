@@ -11,3 +11,4 @@ python-dotenv==1.1.1
 greenlet==3.2.4
 SQLAlchemy==2.0.43
 pygame>=2.3.0
+pytmx>=3.32
