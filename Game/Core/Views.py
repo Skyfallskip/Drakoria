@@ -72,3 +72,26 @@ def Game_View(screen, width, height, maps, camera):
 
         # Desenha a UI do jogo
         draw_game_ui(screen, width, height, ui_images)
+
+
+def Backpack_View():
+        pass
+
+def Quests_View():
+        pass
+
+def Stats_View():
+        pass
+
+def Settings_View():
+        pass
+
+def Skills_View():
+        pass
+
+def Character_Creation_View():
+        pass
+
+def Main_Menu_Settings_View():
+        pass
+
