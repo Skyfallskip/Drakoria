@@ -26,7 +26,7 @@ STATE_SETTINGS_MENU = 6
 
 game_state = STATE_MAIN_MENU
 
-player = Player(r"Game/Assets/Sprites/Characters/Warrior/Warrior_Sprite_Sheet.png")
+player = Player(820,800,r"Game/Assets/Sprites/Characters/Warrior/Warrior_Sprite_Sheet.png")
 camera = Camera(screen_width, screen_height, 0, 0)
 maps = None  # Carrega os mapas apenas quando o jogo começa
 
@@ -67,23 +67,30 @@ while running:
             elif exit_btn.is_clicked(event):
                 running = False
 
+
+
+        # Eventos durante o jogo
+        #Funciona com sorte e com magica
         elif game_state == STATE_GAME_RUNNING:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 
                 sidebar_x = 20
-                sidebar_y = 95
-                if sidebar_x <= mouse_pos[0] <= sidebar_x + 32 and sidebar_y <= mouse_pos[1] <= sidebar_y + 32:
+                sidebar_y = 80
+                if sidebar_x <= mouse_pos[0] <= sidebar_x and sidebar_y <= mouse_pos[1] <= sidebar_y:
                     print("Clicou na mochila")
-                elif sidebar_x <= mouse_pos[0] <= sidebar_x + 32 and sidebar_y + 70 <= mouse_pos[1] <= sidebar_y + 70 + 32:
+                elif sidebar_x <= mouse_pos[0] <= sidebar_x and sidebar_y + 70 <= mouse_pos[1] <= sidebar_y + 70:
                     print("Clicou nas configurações")
-                elif sidebar_x <= mouse_pos[0] <= sidebar_x + 32 and sidebar_y + 140 <= mouse_pos[1] <= sidebar_y + 140 + 32:
+                elif sidebar_x <= mouse_pos[0] <= sidebar_x and sidebar_y + 140 <= mouse_pos[1] <= sidebar_y + 140:
                     print("Clicou nas quests") 
 
-                hotbar_y = 692
-                hotbar_x = -53
-                if hotbar_x <= mouse_pos[0] <= hotbar_x + 53 and hotbar_y <= mouse_pos[1] <= hotbar_y + 58:
-                    print("Hotbar item clicked!")
+                hotbar_y = 515
+                hotbar_x = 120
+                for i in range(10):
+                                slot_x = hotbar_x + (i * 53)
+                                if (slot_x <= mouse_pos[0] <= slot_x + 53 and 
+                                    hotbar_y <= mouse_pos[1] <= hotbar_y + 60):
+                                    print(f"Hotbar slot {i+1} clicked!")
 
 
     pygame.display.flip()
