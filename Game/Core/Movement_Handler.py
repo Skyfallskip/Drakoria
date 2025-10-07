@@ -4,25 +4,25 @@ def handle_player_movement(player, keys, dt):
     moved = False
     if keys[pygame.K_a]:
         player.x -= player.speed
-        player.current_row = 7  # left
+        player.current_row = 3  # left
         moved = True
     elif keys[pygame.K_d]:
         player.x += player.speed
-        player.current_row = 3  # right
+        player.current_row = 2  # right
         moved = True
     elif keys[pygame.K_w]:
         player.y -= player.speed
-        player.current_row = 5  # up
+        player.current_row = 1  # up
         moved = True
     elif keys[pygame.K_s]:
         player.y += player.speed
-        player.current_row = 1  # down
+        player.current_row = 0  # down
         moved = True
     if moved:
         player.animation_timer += dt
         if player.animation_timer >= player.animation_speed:
-            # Ta com 1 sprite a mais, nao sei pq
-            player.current_frame = (player.current_frame + 1) % 5  # 3 frames por direção
+
+            player.current_frame = (player.current_frame + 1) % 3  # 3 frames por direção
             player.animation_timer = 0
     else:
         player.current_frame = 0  # Frame parado
