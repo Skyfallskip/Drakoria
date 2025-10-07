@@ -1,5 +1,6 @@
 import pygame
 from Camera_Handler import Camera
+from Map_Loader import load_world_maps
 
 class Player:
     def __init__(self, x, y, sprite_path):
@@ -45,4 +46,10 @@ class Player:
                             Player.x = x * tmx.tilewidth + m["x"] * tmx.tilewidth
                             Player.y = y * tmx.tileheight + m["y"] * tmx.tileheight
                             return x, y
+
+#Carrega os mapas
+maps = load_world_maps(r"Tiled_Map_Editor_Stuff\World\Zones.world")
+
+#Encontra o tile de spawn
+Player.find_spawn_tile(maps)
 

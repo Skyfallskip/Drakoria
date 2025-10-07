@@ -1,6 +1,6 @@
 import pygame
 from Core.Views import Main_Menu, Game_View
-from Core.Player_Handler import Player, find_spawn_tile
+from Core.Player_Handler import Player
 from Core.Map_Loader import load_world_maps
 from Core.Camera_Handler import Camera
 from Core.Movement_Handler import handle_player_movement
@@ -26,7 +26,7 @@ STATE_SETTINGS_MENU = 6
 
 game_state = STATE_MAIN_MENU
 
-player = Player(0, 0, r"Tiled_Map_Editor_Stuff\Tilesets_png\Caracters\Human-Worker-Red.png")
+player = Player(r"Game/Assets/Sprites/Characters/Warrior/Warrior_Sprite_Sheet.png")
 camera = Camera(screen_width, screen_height, 0, 0)
 maps = None  # Carrega os mapas apenas quando o jogo começa
 
@@ -46,6 +46,7 @@ while running:
             Game_View(screen, screen_width, screen_height, maps, camera)
         dt = clock.get_time() / 1000
         handle_player_movement(player, keys, dt)
+        
         camera.update(player)
 
         player.draw(screen, camera)
