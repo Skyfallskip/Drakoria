@@ -23,19 +23,3 @@ def load_world_maps(world_file):
         })
 
     return loaded_maps
-
-
-#Acha o tile de spawn
-def find_spawn_tile(maps):
-    for m in maps:
-        tmx = m["tmx"]
-        for layer in tmx.visible_layers:
-            if hasattr(layer, "tiles"):
-                for x, y, gid in layer.tiles():
-                    props = tmx.get_tile_properties_by_gid(gid)
-                    if props and props.get("Spawn") == True:
-                        px = x * tmx.tilewidth + m["x"] * tmx.tilewidth
-                        py = y * tmx.tileheight + m["y"] * tmx.tileheight
-                        return px, py
-    return 0, 0
-

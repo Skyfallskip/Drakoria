@@ -1,7 +1,7 @@
 import pygame
 from Core.Views import Main_Menu, Game_View
-from Core.Player_Handler import Player
-from Core.Map_Loader import load_world_maps, find_spawn_tile
+from Core.Player_Handler import Player, find_spawn_tile
+from Core.Map_Loader import load_world_maps
 from Core.Camera_Handler import Camera
 from Core.Movement_Handler import handle_player_movement
 
@@ -60,8 +60,6 @@ while running:
                 # Carrega os mapas quando o jogo começa
                 maps = load_world_maps(r"Tiled_Map_Editor_Stuff\World\Zones.world")
                 print("Loaded maps:", len(maps))
-                spawn_x, spawn_y = find_spawn_tile(maps)
-                player.x, player.y = spawn_x, spawn_y
                 game_state = STATE_GAME_RUNNING
             elif settings_btn.is_clicked(event):
                 game_state = STATE_SETTINGS_MENU

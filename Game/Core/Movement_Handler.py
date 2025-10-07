@@ -21,7 +21,11 @@ def handle_player_movement(player, keys, dt):
     if moved:
         player.animation_timer += dt
         if player.animation_timer >= player.animation_speed:
+            # Ta com 1 sprite a mais, nao sei pq
             player.current_frame = (player.current_frame + 1) % 5  # 3 frames por direção
             player.animation_timer = 0
     else:
         player.current_frame = 0  # Frame parado
+
+    
+    

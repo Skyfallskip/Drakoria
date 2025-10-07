@@ -1,4 +1,5 @@
 import pygame
+from Camera_Handler import Camera
 
 class Player:
     def __init__(self, x, y, sprite_path):
@@ -17,7 +18,7 @@ class Player:
 
     #Desenha o jogador na tela
     def draw(self, screen, camera):
-        cam_x, cam_y = camera.apply(self.x, self.y)
+        Camera.x, Camera.y = camera.apply(self.x, self.y)
         frame_rect = pygame.Rect(
             self.current_frame * self.frame_width, #Pega a largura do frame
             self.current_row * self.frame_height, #pega a altura do frame
@@ -31,6 +32,7 @@ class Player:
 
 
     #Função para encontrar o tile de spawn
+    #Nao funciona
     def find_spawn_tile(maps):
         for m in maps:
             tmx = m["tmx"]
@@ -40,9 +42,7 @@ class Player:
                         props = tmx.get_tile_properties_by_gid(gid)
                         if props and props.get("Spawn") == True:
                             # Retorna a posicao em pixels
-                            px = x * tmx.tilewidth + m["x"] * tmx.tilewidth
-                            py = y * tmx.tileheight + m["y"] * tmx.tileheight
-                            return px, py
-        # Se nao encontrar, retorna (0,0)
-        return 0, 0
+                            Player.x = x * tmx.tilewidth + m["x"] * tmx.tilewidth
+                            Player.y = y * tmx.tileheight + m["y"] * tmx.tileheight
+                            return x, y
 
