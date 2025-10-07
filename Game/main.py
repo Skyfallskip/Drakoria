@@ -67,6 +67,25 @@ while running:
             elif exit_btn.is_clicked(event):
                 running = False
 
+        elif game_state == STATE_GAME_RUNNING:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                
+                sidebar_x = 20
+                sidebar_y = 95
+                if sidebar_x <= mouse_pos[0] <= sidebar_x + 32 and sidebar_y <= mouse_pos[1] <= sidebar_y + 32:
+                    print("Clicou na mochila")
+                elif sidebar_x <= mouse_pos[0] <= sidebar_x + 32 and sidebar_y + 70 <= mouse_pos[1] <= sidebar_y + 70 + 32:
+                    print("Clicou nas configurações")
+                elif sidebar_x <= mouse_pos[0] <= sidebar_x + 32 and sidebar_y + 140 <= mouse_pos[1] <= sidebar_y + 140 + 32:
+                    print("Clicou nas quests") 
+
+                hotbar_y = 692
+                hotbar_x = -53
+                if hotbar_x <= mouse_pos[0] <= hotbar_x + 53 and hotbar_y <= mouse_pos[1] <= hotbar_y + 58:
+                    print("Hotbar item clicked!")
+
+
     pygame.display.flip()
     clock.tick(60)  # Limita a 60 FPS
 

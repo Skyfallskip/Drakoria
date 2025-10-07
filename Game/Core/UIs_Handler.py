@@ -1,28 +1,40 @@
 import pygame
 import os
 
-def load_ui_images():
-    ui_path = "Game/Assets/UIs/UI_Game"
-    # Carrega todas as imagens necessárias para a UI
-    images = {
-        "hotbar_holder": pygame.image.load(os.path.join(ui_path, "Hot_Bar", "Item_Frame_Holder_Hot_Bar1.png")),
-        "hotbar_item": pygame.image.load(os.path.join(ui_path, "Hot_Bar", "Item_Frame_Hot_Bar1.png")),
-        "minimap_layer1": pygame.image.load(os.path.join(ui_path, "Mini_Map", "Layer_1.png")),
-        "minimap_layer2": pygame.image.load(os.path.join(ui_path, "Mini_Map", "Layer_2.png")),
-        "backpack_slot": pygame.image.load(os.path.join(ui_path, "Side_Bar", "BackPack_Slot.png")),
-        "gear_slot": pygame.image.load(os.path.join(ui_path, "Side_Bar", "Gear_Slot.png")),
-        "gold_coin": pygame.image.load(os.path.join(ui_path, "Side_Bar", "Gold_Coin.png")),
-        "quest_scroll": pygame.image.load(os.path.join(ui_path, "Side_Bar", "Quest_Scroll.png")),
-        "health_bar": pygame.image.load(os.path.join(ui_path, "Profile", "Health_Bar_Profile_UI1.png")),
-        "mana_bar": pygame.image.load(os.path.join(ui_path, "Profile", "Mana_Bar_Profile_UI1.png")),
-        "stamina_bar": pygame.image.load(os.path.join(ui_path, "Profile", "Stamina_Bar_Profile_UI1.png")),
-        "level_frame": pygame.image.load(os.path.join(ui_path, "Profile", "Level_Frame_Profile_UI1.png")),
-        "level_bg": pygame.image.load(os.path.join(ui_path, "Profile", "Level_Frame_Background_Profile_UI1.png")),
-        "level_number": pygame.image.load(os.path.join(ui_path, "Profile", "Level_Number_Profile_UI1.png")),
-    }
-    return images
+ui_path = "Game/Assets/"
+# Carrega todas as imagens necessárias para a UI
+images = {
 
-def draw_game_ui(screen, width, height, images):
+    #hotbar
+    "hotbar_holder": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Hot_Bar", "Item_Frame_Holder_Hot_Bar1.png")),
+    "hotbar_item": pygame.image.load(os.path.join(ui_path,'UIs','UI_Game', "Hot_Bar", "Item_Frame_Hot_Bar1.png")),
+
+    #minimap
+    "minimap_layer1": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Mini_Map", "Layer_1.png")),
+    "minimap_layer2": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Mini_Map", "Layer_2.png")),
+
+    #Side menu
+    "backpack_slot": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Side_Bar", "BackPack_Slot.png")), # Tornar um botao
+    "gear_slot": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Side_Bar", "Gear_Slot.png")), # Tornar um botao
+    "quest_scroll": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Side_Bar", "Quest_Scroll.png")), # Tornar um botao
+    "gold_coin": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Side_Bar", "Gold_Coin.png")),
+
+
+    #Profile
+    "health_bar": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Profile", "Health_Bar.png")),
+    "mana_bar": pygame.image.load(os.path.join(ui_path,'UIs','UI_Game', "Profile", "Mana_Bar.png")),
+    "stamina_bar": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Profile", "Stamina_Bar.png")),
+
+    "level_frame": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Profile", "Level_Frame_Profile_UI1.png")), # AUMENTAR IMAGEM
+    "level_bg": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Profile", "Level_Frame_Background_Profile_UI1.png")), # AUMENTAR IMAGEM
+    "level_number": pygame.image.load(os.path.join(ui_path,'UIs','UI_Game', "Profile", "Level_Number_Profile_UI1.png")), # AUMENTAR IMAGEM
+
+
+
+
+    }
+
+def draw_game_ui(screen, width, height):
     # Perfil do jogador (topo esquerdo)
     profile_x = 20
     profile_y = 20

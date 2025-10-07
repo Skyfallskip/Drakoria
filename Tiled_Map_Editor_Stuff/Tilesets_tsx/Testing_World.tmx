@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="5">
  <tileset firstgid="1" name="Basic_Map_Tileset" tilewidth="32" tileheight="32" tilecount="12" columns="4">
-  <image source="../../../../../Downloads/New Piskel.png" width="128" height="96"/>
+  <image source="Tiles_Basicos.png" width="128" height="96"/>
   <tile id="2">
    <properties>
     <property name="NPC_Spawn" type="bool" value="true"/>

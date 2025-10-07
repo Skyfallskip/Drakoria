@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="2">
  <tileset firstgid="1" name="Basic_Tiles" tilewidth="32" tileheight="32" tilecount="12" columns="4">
-  <image source="../../../../../Downloads/New Piskel.png" width="128" height="96"/>
+  <image source="Tiles_Basicos.png" width="128" height="96"/>
   <tile id="4">
    <properties>
     <property name="Collision" type="bool" value="true"/>

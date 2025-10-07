@@ -1,6 +1,5 @@
 import pygame
-from Camera_Handler import Camera
-from Map_Loader import load_world_maps
+from Core.Camera_Handler import Camera
 
 class Player:
     def __init__(self, x, y, sprite_path):
@@ -8,9 +7,9 @@ class Player:
         self.y = y
         self.speed = 4
         self.sprite_sheet = pygame.image.load(sprite_path).convert_alpha()
-        self.columns = 12
-        self.rows = 8
-        self.frame_width = self.sprite_sheet.get_width() // 12
+        self.columns = 6
+        self.rows = 5
+        self.frame_width = self.sprite_sheet.get_width() // 3
         self.frame_height = self.sprite_sheet.get_height() // self.rows
         self.current_frame = 0
         self.current_row = 0  # 0: down, 1: left, 2: right, 3: up
@@ -46,10 +45,4 @@ class Player:
                             Player.x = x * tmx.tilewidth + m["x"] * tmx.tilewidth
                             Player.y = y * tmx.tileheight + m["y"] * tmx.tileheight
                             return x, y
-
-#Carrega os mapas
-maps = load_world_maps(r"Tiled_Map_Editor_Stuff\World\Zones.world")
-
-#Encontra o tile de spawn
-Player.find_spawn_tile(maps)
 
