@@ -3,3 +3,7 @@
 //Mateus
 
 Achei um sprite pra mago e guerreiro, falta adaptar, fiz o menu de quests, settings e inventario.
+
+// Pietro 
+
+Fiz os sprites da Maçã, sopa, frango assado, queijo e pao
