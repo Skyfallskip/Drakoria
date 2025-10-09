@@ -1,5 +1,5 @@
 import pygame
-from Core.Views import Main_Menu, Game_View
+from Core.Views import Main_Menu, Game_View, Backpack_View
 from Core.Player_Handler import Player
 from Core.Map_Loader import load_world_maps
 from Core.Camera_Handler import Camera
@@ -22,6 +22,7 @@ ORANGE = (255, 165, 0)
 
 STATE_MAIN_MENU = 1
 STATE_GAME_RUNNING = 2
+STATE_INVENTORY_OPEN = 3
 STATE_SETTINGS_MENU = 6
 
 game_state = STATE_MAIN_MENU
@@ -39,6 +40,7 @@ while running:
     # Desenha o menu ou o jogo a cada frame
     if game_state == STATE_MAIN_MENU:
         start_btn, settings_btn, exit_btn = Main_Menu(screen, screen_width, screen_height, BLACK, ORANGE)
+        
    
     elif game_state == STATE_GAME_RUNNING:
         keys = pygame.key.get_pressed()
@@ -50,6 +52,11 @@ while running:
         camera.update(player)
 
         player.draw(screen, camera)
+    
+    elif game_state == STATE_INVENTORY_OPEN:
+        mouse_pos = pygame.mouse.get_pos()
+        Backpack_View(screen,mouse_pos,maps,camera)
+         
 
 
     for event in pygame.event.get():
@@ -74,15 +81,32 @@ while running:
         elif game_state == STATE_GAME_RUNNING:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                
-                sidebar_x = 20
-                sidebar_y = 80
-                if sidebar_x <= mouse_pos[0] <= sidebar_x and sidebar_y <= mouse_pos[1] <= sidebar_y:
+                                
+                # NAO MEXE NISSO AQUI PELO AMOR DE DEUS
+                sidebar_x = 22
+                sidebar_y = 200
+                sidebar_width = 50   # largura do item
+                sidebar_height = 55  # altura do item
+
+                print(mouse_pos[0])
+                print(mouse_pos[1])
+
+
+                #pygame.draw.rect(screen,BLACK,(20,340,50,55)) # debug (x,y,width,height)
+                if (sidebar_x <= mouse_pos[0] <= sidebar_x + sidebar_width and
+                    sidebar_y <= mouse_pos[1] <= sidebar_y + sidebar_height):
                     print("Clicou na mochila")
-                elif sidebar_x <= mouse_pos[0] <= sidebar_x and sidebar_y + 70 <= mouse_pos[1] <= sidebar_y + 70:
+                    game_state = 3
+                    
+
+                elif (sidebar_x <= mouse_pos[0] <= sidebar_x + sidebar_width and
+                    (sidebar_y + sidebar_height) + 15 <= mouse_pos[1] <= sidebar_y + sidebar_height * 2):
                     print("Clicou nas configurações")
-                elif sidebar_x <= mouse_pos[0] <= sidebar_x and sidebar_y + 140 <= mouse_pos[1] <= sidebar_y + 140:
-                    print("Clicou nas quests") 
+
+                elif (sidebar_x <= mouse_pos[0] <= sidebar_x + sidebar_width and
+                    (sidebar_y + sidebar_height * 2) + 30 <= mouse_pos[1] <= (sidebar_y + sidebar_height * 3) + 30):
+                    print("Clicou nas quests")
+
 
                 hotbar_y = 515
                 hotbar_x = 120
@@ -91,6 +115,8 @@ while running:
                                 if (slot_x <= mouse_pos[0] <= slot_x + 53 and 
                                     hotbar_y <= mouse_pos[1] <= hotbar_y + 60):
                                     print(f"Hotbar slot {i+1} clicked!")
+
+                 
 
 
     pygame.display.flip()

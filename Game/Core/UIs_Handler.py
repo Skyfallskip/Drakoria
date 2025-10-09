@@ -25,22 +25,32 @@ images = {
     "mana_bar": pygame.image.load(os.path.join(ui_path,'UIs','UI_Game', "Profile", "Mana_Bar.png")),
     "stamina_bar": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Profile", "Stamina_Bar.png")),
 
-    "level_frame": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Profile", "Level_Frame_Profile_UI1.png")), # AUMENTAR IMAGEM
-    "level_bg": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Profile", "Level_Frame_Background_Profile_UI1.png")), # AUMENTAR IMAGEM
-    "level_number": pygame.image.load(os.path.join(ui_path,'UIs','UI_Game', "Profile", "Level_Number_Profile_UI1.png")), # AUMENTAR IMAGEM
+    "level_frame": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Profile", "Level_Frame.png")), # AUMENTAR IMAGEM
+    "level_bg": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Profile", "Level_Frame_Background.png")), # AUMENTAR IMAGEM
+    "level_number": pygame.image.load(os.path.join(ui_path,'UIs','UI_Game', "Profile", "Level_Number.png")), # AUMENTAR IMAGEM
 
 
 
 
     }
 
+profile_frame = images['level_frame']
+profile_frame = pygame.transform.scale(profile_frame,(200,110))
+
+profile_level = images['level_number']
+profile_level = pygame.transform.scale(profile_level,(200,110))
+
+profile_background = images['level_bg']
+profile_background = pygame.transform.scale(profile_background,(200,110))
+
+
 def draw_game_ui(screen, width, height):
     # Perfil do jogador (topo esquerdo)
-    profile_x = 20
-    profile_y = 20
-    screen.blit(images["level_bg"], (profile_x, profile_y))
-    screen.blit(images["level_frame"], (profile_x, profile_y))
-    screen.blit(images["level_number"], (profile_x, profile_y))
+    profile_x = 15
+    profile_y = 30
+    screen.blit(profile_background, (profile_x, profile_y))
+    screen.blit(profile_frame, (profile_x, profile_y))
+    screen.blit(profile_level, (profile_x, profile_y))
 
     # Barras ao lado
     bar_x = profile_x
@@ -51,7 +61,7 @@ def draw_game_ui(screen, width, height):
 
     # Ouro (baixo do perfil)
     gold_x = 20
-    gold_y = profile_y + images["level_bg"].get_height() + 15
+    gold_y = 140
     screen.blit(images["gold_coin"], (gold_x, gold_y))
 
     gold_font = pygame.font.Font("Game/Assets/Font/Adventurer.ttf", 20)
