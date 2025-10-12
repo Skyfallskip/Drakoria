@@ -1,0 +1,6 @@
+12/10/2025
+
+// Mateus
+
+Implementei as UIs de inventario (nao 100%), quests (nao 100%), e config( nao 100% ). Priorizei essas porque sao as que tem botao na tela e pra min é inaceitavel ter um botao que nao faz nada na tela :v
+Vou olhar o bug de tar carregando so um mapa depois. Vou jogar :D

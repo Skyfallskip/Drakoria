@@ -1,5 +1,5 @@
 import pygame
-from Core.Views import Main_Menu, Game_View, Backpack_View
+from Core.Views import Main_Menu, Game_View, Backpack_View, Quests_View, Config_View
 from Core.Player_Handler import Player
 from Core.Map_Loader import load_world_maps
 from Core.Camera_Handler import Camera
@@ -23,7 +23,12 @@ ORANGE = (255, 165, 0)
 STATE_MAIN_MENU = 1
 STATE_GAME_RUNNING = 2
 STATE_INVENTORY_OPEN = 3
-STATE_SETTINGS_MENU = 6
+STATE_STATUS_VIEW = 4
+STATE_SKILLS_VIEW = 5
+STATE_QUESTS_VIEW = 6
+STATE_EQUIPMENT_VIEW = 7
+STATE_CONFIG = 8
+STATE_SETTINGS_MENU = 9
 
 game_state = STATE_MAIN_MENU
 
@@ -36,11 +41,13 @@ running = True
 clock = pygame.time.Clock()
 while running:
     screen.fill(GRAY)  # Limpa a tela
+    mouse_pos = pygame.mouse.get_pos()
 
-    # Desenha o menu ou o jogo a cada frame
+
+    # --------------- Estados do jogo ----------------
+
     if game_state == STATE_MAIN_MENU:
         start_btn, settings_btn, exit_btn = Main_Menu(screen, screen_width, screen_height, BLACK, ORANGE)
-        
    
     elif game_state == STATE_GAME_RUNNING:
         keys = pygame.key.get_pressed()
@@ -54,10 +61,64 @@ while running:
         player.draw(screen, camera)
     
     elif game_state == STATE_INVENTORY_OPEN:
-        mouse_pos = pygame.mouse.get_pos()
         Backpack_View(screen,mouse_pos,maps,camera)
-         
 
+        #Fecha o inventario
+        if Backpack_View(screen,mouse_pos,maps,camera) == 2:
+            game_state = STATE_GAME_RUNNING
+
+        #Muda pra aba de quests
+        elif Backpack_View(screen,mouse_pos,maps,camera) == 6:
+            game_state = STATE_QUESTS_VIEW
+
+        #Muda pra aba de configurações
+        elif Backpack_View(screen,mouse_pos,maps,camera) == 8:
+            game_state = STATE_CONFIG
+        
+    elif game_state == STATE_STATUS_VIEW:
+         pass
+    
+    elif game_state == STATE_SKILLS_VIEW:
+         pass
+    
+    elif game_state == STATE_QUESTS_VIEW:
+            Quests_View(screen,mouse_pos,maps,camera)
+    
+            #Fecha a aba de quests
+            if Quests_View(screen,mouse_pos,maps,camera) == 2:
+                game_state = STATE_GAME_RUNNING
+            
+            elif Quests_View(screen,mouse_pos,maps,camera) == 3:
+                game_state = STATE_INVENTORY_OPEN
+            
+            elif Quests_View(screen,mouse_pos,maps,camera) == 8:
+                game_state = STATE_CONFIG
+
+    elif game_state == STATE_EQUIPMENT_VIEW:
+         pass
+
+    # ingame config
+    elif game_state == STATE_CONFIG:
+        Config_View(screen,mouse_pos,maps,camera)
+
+        if Config_View(screen,mouse_pos,maps,camera) == 2:
+            game_state = STATE_GAME_RUNNING
+
+        elif Config_View(screen,mouse_pos,maps,camera) == 3:
+            game_state = STATE_INVENTORY_OPEN
+        
+        elif Config_View(screen,mouse_pos,maps,camera) == 6:
+            game_state = STATE_QUESTS_VIEW
+
+        elif Config_View(screen,mouse_pos,maps,camera) == 8:
+            game_state = STATE_CONFIG
+
+    # main menu config
+    elif game_state == STATE_SETTINGS_MENU:
+         pass
+
+
+    # --------------- Eventos ----------------
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -69,12 +130,12 @@ while running:
                 maps = load_world_maps(r"Tiled_Map_Editor_Stuff\World\Zones.world")
                 print("Loaded maps:", len(maps))
                 game_state = STATE_GAME_RUNNING
+
             elif settings_btn.is_clicked(event):
                 game_state = STATE_SETTINGS_MENU
+
             elif exit_btn.is_clicked(event):
                 running = False
-
-
 
         # Eventos durante o jogo
         #Funciona com sorte e com magica
@@ -101,10 +162,12 @@ while running:
 
                 elif (sidebar_x <= mouse_pos[0] <= sidebar_x + sidebar_width and
                     (sidebar_y + sidebar_height) + 15 <= mouse_pos[1] <= sidebar_y + sidebar_height * 2):
+                    game_state = 8
                     print("Clicou nas configurações")
 
                 elif (sidebar_x <= mouse_pos[0] <= sidebar_x + sidebar_width and
                     (sidebar_y + sidebar_height * 2) + 30 <= mouse_pos[1] <= (sidebar_y + sidebar_height * 3) + 30):
+                    game_state = 6
                     print("Clicou nas quests")
 
 
@@ -115,6 +178,7 @@ while running:
                                 if (slot_x <= mouse_pos[0] <= slot_x + 53 and 
                                     hotbar_y <= mouse_pos[1] <= hotbar_y + 60):
                                     print(f"Hotbar slot {i+1} clicked!")
+        
 
                  
 
