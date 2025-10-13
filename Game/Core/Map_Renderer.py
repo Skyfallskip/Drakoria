@@ -6,8 +6,8 @@ import pytmx
 def render_maps(screen, maps, camera):
     for m in maps:
         tmx = m["tmx"]
-        offset_x = m["x"] * tmx.tilewidth
-        offset_y = m["y"] * tmx.tileheight
+        offset_x = m["x"] #* tmx.tilewidth Isso aq q tava causando o erro kkkkkkkkkkkkkkkkkkkkkkkkkkkk
+        offset_y = m["y"] #* tmx.tileheight
 
         for layer in tmx.visible_layers:
             if hasattr(layer, "tiles"):
