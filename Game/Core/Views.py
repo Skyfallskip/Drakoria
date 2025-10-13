@@ -303,3 +303,140 @@ def Character_Creation_View():
 def Main_Menu_Settings_View():
         pass
 
+import pygame
+from Core.Buttons_Logic import Button
+
+def Account_Menu_View(screen, mouse_pos):
+    pygame.font.init()
+    clock = pygame.time.Clock()
+
+    # --- BACKGROUND ---
+    background = pygame.image.load(r"Game\Assets\Images\Main_Menu_Backgrond.png")
+    background = pygame.transform.scale(background, (800, 600))
+    screen.blit(background, (0, 0))
+
+    # Menu Principal
+    layer_1 = pygame.image.load(r"Game\Assets\UIs\Account_Menu\Layer_1.png")
+    layer_1 = pygame.transform.scale(layer_1, (700, 500))
+    screen.blit(layer_1, (50, 50))
+
+    # Fonts
+    font_title = pygame.font.Font(r"Game\Assets\Font\Adventurer.ttf", 50)
+    font_label = pygame.font.Font(r"Game\Assets\Font\Adventurer.ttf", 40)
+    font_input = pygame.font.Font(r"Game\Assets\Font\Adventurer.ttf", 35)
+    font_forgot = pygame.font.Font(r"Game\Assets\Font\Adventurer.ttf", 18)
+
+    title_text = font_title.render("Account Center", True, (0, 0, 0))
+    screen.blit(title_text, (240, 85))
+    screen.blit(font_label.render("Username", True, (0, 0, 0)), (110, 150))
+    screen.blit(font_label.render("Password", True, (0, 0, 0)), (110, 260))
+    screen.blit(font_forgot.render("Esqueceu a Senha", True, (40, 30, 20)), (530, 360))
+
+    # Input
+    username_rect = pygame.Rect(90, 190, 630, 48)
+    password_rect = pygame.Rect(90, 300, 630, 48)
+
+    username_text = ""
+    password_text = ""
+    active_input = None
+    cursor_visible = True
+    cursor_timer = 0
+
+    # Botoes
+    login_button = Button(80, 430, 186, 76, "Log in", (210, 170, 140))
+    create_button = Button(280, 430, 210, 76, "Create Acc", (210, 170, 140))
+    back_button = Button(540, 430, 186, 76, "Back", (210, 170, 140))
+
+    running = True
+    while running:
+        screen.blit(background, (0, 0))
+        screen.blit(layer_1, (50, 50))
+        screen.blit(title_text, (240, 85))
+        screen.blit(font_label.render("Username", True, (0, 0, 0)), (110, 150))
+        screen.blit(font_label.render("Password", True, (0, 0, 0)), (110, 260))
+        screen.blit(font_forgot.render("Esqueceu a Senha", True, (40, 30, 20)), (530, 360))
+
+        pygame.draw.rect(screen, (230, 216, 195, 10), username_rect, 0, 25)
+        pygame.draw.rect(screen, (230, 216, 195, 10), password_rect, 0, 25)
+
+        if not username_text and active_input != "username":
+            screen.blit(font_input.render("Digite aqui", True, (90, 80, 70)), (120, 195))
+        if not password_text and active_input != "password":
+            screen.blit(font_input.render("Digite aqui", True, (90, 80, 70)), (120, 305))
+
+        username_surface = font_input.render(username_text, True, (0, 0, 0))
+        password_surface = font_input.render("*" * len(password_text), True, (0, 0, 0))
+
+        screen.blit(username_surface, (120, 195))
+        screen.blit(password_surface, (120, 305))
+
+        cursor_timer += 1
+        if cursor_timer >= 630:
+            cursor_timer = 0
+            cursor_visible = not cursor_visible
+
+        if cursor_visible and active_input:
+            cursor_x = 120 + font_input.size(username_text if active_input == "username" else "*" * len(password_text))[0] + 5
+            cursor_y = 195 if active_input == "username" else 305
+            pygame.draw.line(screen, (0, 0, 0), (cursor_x, cursor_y), (cursor_x, cursor_y + 40), 2)
+
+        login_button.draw(screen)
+        create_button.draw(screen)
+        back_button.draw(screen)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return 5
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if username_rect.collidepoint(event.pos):
+                    active_input = "username"
+                elif password_rect.collidepoint(event.pos):
+                    active_input = "password"
+                else:
+                    active_input = None
+
+                if login_button.is_clicked(event) and username_text and password_text:
+                    print("Login clicked")
+                    print(f"Username: {username_text}, Password: {password_text}")
+                    return "Game_Running" #Temporario Retorna pro jogo so pra testa login
+                elif login_button.is_clicked(event):
+                      print("Preencha todos os campos")
+
+                if create_button.is_clicked(event):
+                    print("Create Account clicked")
+                    return "Account_Creation"
+                
+                elif back_button.is_clicked(event):
+                    print("Back clicked")
+                    return "Main_Menu"
+
+            if event.type == pygame.KEYDOWN:
+                if active_input == "username":
+                    if event.key == pygame.K_BACKSPACE:
+                        username_text = username_text[:-1]
+                    elif event.key == pygame.K_RETURN:
+                        active_input = "password"
+                    else:
+                        if len(username_text) < 30:
+                            username_text += event.unicode
+
+                elif active_input == "password":
+                    if event.key == pygame.K_BACKSPACE:
+                        password_text = password_text[:-1]
+                    elif event.key == pygame.K_RETURN:
+                        print("Submitting login...")
+                        return 1
+                    else:
+                        if len(password_text) < 30:
+                            password_text += event.unicode
+
+        pygame.display.flip()
+        clock.tick(60)
+
+    return 5
+
+
+def Character_Selection_View(screen, mouse_pos):
+        pass
