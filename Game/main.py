@@ -1,9 +1,8 @@
 import pygame
 from Core.Views import Main_Menu, Game_View, Backpack_View, Quests_View, Config_View,Account_Menu_View, Character_Selection_View
 from Core.Player_Handler import Player
-from Core.Map_Loader import load_world_maps
 from Core.Camera_Handler import Camera
-from Core.Movement_Handler import handle_player_movement
+from Core.Movement_Handler import handle_player_movement, Collision_Handler
 
 
 # Inicializa o pygame
@@ -58,6 +57,8 @@ while running:
             Game_View(screen, screen_width, screen_height, maps, camera)
 
         dt = clock.get_time() / 1000
+
+        Collision_Handler(player,maps)
         handle_player_movement(player, keys, dt)
         
         camera.update(player)

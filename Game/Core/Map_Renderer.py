@@ -2,9 +2,10 @@ import pygame
 import pytmx
 
 
+
 #Renderiza os mapas na tela
 def render_maps(screen, maps, camera):
-    for m in maps:
+    for m in maps[0]:
         tmx = m["tmx"]
         offset_x = m["x"] #* tmx.tilewidth Isso aq q tava causando o erro kkkkkkkkkkkkkkkkkkkkkkkkkkkk
         offset_y = m["y"] #* tmx.tileheight
