@@ -12,10 +12,10 @@ class personagem(Base):
     #Atributos base
     id_Personagem = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String, unique=True, nullable=False)
-    idade = Column(Integer, nullable=False)
-    genero = Column(String, nullable=False)
-    perks = Column(JSON) # Lista em formato nome : Beneficio
-    customizacao = Column(JSON)  # Exemplo: {"cabelo": "curto", etc} 
+    #idade = Column(Integer, nullable=False)
+    #genero = Column(String, nullable=False)
+    #perks = Column(JSON) # Lista em formato nome : Beneficio
+    #customizacao = Column(JSON)  # Exemplo: {"cabelo": "curto", etc} 
 
     # Relacionamentos 
     id_conta = Column(Integer, ForeignKey("Conta.id_Conta"))
@@ -54,10 +54,10 @@ class status(Base):
     defense = Column(Integer, default=10) #Def, Aumenta a vida maxima
     agility = Column(Integer, default=10) #Agi, aumenta velocidade, esquiva, chance de acerto critico
     intelligence = Column(Integer, default=10) #Int, aumenta poder magico e mana maxima
-    hunger = Column(Float, default=100.0) #Fome
-    thirst = Column(Float, default=100.0) #Sede
-    weight = Column(Float, default=0.0) #Peso atual
-    max_weight = Column(Float, default=100.0) #Peso maximo
+    #hunger = Column(Float, default=100.0) #Fome
+    #thirst = Column(Float, default=100.0) #Sede
+    #weight = Column(Float, default=0.0) #Peso atual
+    #max_weight = Column(Float, default=100.0) #Peso maximo
 
     xp = Column(Integer, default=0) #Experiencia
     level = Column(Integer, default=1) #Nivel
@@ -130,8 +130,8 @@ class classe(Base):
     habilidades = Column(JSON)  # Lista de habilidades especiais da classe
     bonus_atributos = Column(JSON)  # Atributos extras da classe, exemplo: {"mana_bonus": 50, "stamina_bonus": 20}
     buffs = Column(JSON)  # Buffs passivos da classe
-    debuffs = Column(JSON)  # Debuffs passivos da classe
-    requisitos = Column(JSON)  # Requisitos para escolher a classe, exemplo: {"level": 5, "strength": 15}
+    #debuffs = Column(JSON)  # Debuffs passivos da classe
+    #requisitos = Column(JSON)  # Requisitos para escolher a classe, exemplo: {"level": 5, "strength": 15}
     
     personagens = relationship("Personagem", back_populates="classe")
 
@@ -203,19 +203,19 @@ class weapon(item):
     Classe_Weapon = Column(String, nullable=False)  # Classe que pode usar a arma
     attack_speed = Column(Float, default=1.0)  # Velocidade de ataque
 
-class equipament(item):
-    __tablename__ = "equipament"
+# class equipament(item):
+#     __tablename__ = "equipament"
 
-    __mapper_args__ = {
-        'polymorphic_identity': 'Equipament',
-    }
+#     __mapper_args__ = {
+#         'polymorphic_identity': 'Equipament',
+#     }
 
-    id_Equipament = Column(Integer, ForeignKey("Item.id_Item"), primary_key=True)
-    equip_type = Column(String, nullable=False)  # Ex: Capacete, Peitoral, Botas, etc
-    stat_bonus = Column(JSON)  # Bônus de status fornecidos pelo equipamento
-    slot = Column(String, nullable=False)  # Slot onde o equipamento é usado, ex: cabeça, torso, pernas, etc
-    Classe_Equipament = Column(String, nullable=False)  # Classe que pode usar o equipamento
-    set_bonus = Column(JSON)  # Bônus de conjunto, exemplo: {"2 peças": {"strength_bonus": 5}, "4 peças": {"critical_chance": 10}}
+#     id_Equipament = Column(Integer, ForeignKey("Item.id_Item"), primary_key=True)
+#     equip_type = Column(String, nullable=False)  # Ex: Capacete, Peitoral, Botas, etc
+#     stat_bonus = Column(JSON)  # Bônus de status fornecidos pelo equipamento
+#     slot = Column(String, nullable=False)  # Slot onde o equipamento é usado, ex: cabeça, torso, pernas, etc
+#     Classe_Equipament = Column(String, nullable=False)  # Classe que pode usar o equipamento
+#     set_bonus = Column(JSON)  # Bônus de conjunto, exemplo: {"2 peças": {"strength_bonus": 5}, "4 peças": {"critical_chance": 10}}
 
 class consumable(item):
     __tablename__ = "consumable"
