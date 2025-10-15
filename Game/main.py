@@ -58,36 +58,36 @@ while running:
 
         dt = clock.get_time() / 1000
 
-        Collision_Handler(player,maps)
-        handle_player_movement(player, keys, dt)
+        dx, dy = handle_player_movement(player, keys, dt)
+        Collision_Handler(player,maps,dx,dy,screen,camera)
         
         camera.update(player)
 
         player.draw(screen, camera)
     
     elif game_state == STATE_ACCOUNT_MENU:
-        Account_Menu_View(screen, mouse_pos,maps)
+        Current_State = Account_Menu_View(screen, mouse_pos,maps)
 
-        if Account_Menu_View(screen, mouse_pos,maps)[0] == STATE_GAME_RUNNING:
-            maps = Account_Menu_View(screen, mouse_pos,maps)[1]
+        if Current_State[0] == STATE_GAME_RUNNING:
+            maps = Current_State[1]
             game_state = STATE_GAME_RUNNING
     
     elif game_state == STATE_CHARACTER_SELECTION:
          pass
     
     elif game_state == STATE_INVENTORY_OPEN:
-        Backpack_View(screen,mouse_pos,maps,camera)
+        Current_State = Backpack_View(screen,mouse_pos,maps,camera)
 
         #Fecha o inventario
-        if Backpack_View(screen,mouse_pos,maps,camera) == STATE_GAME_RUNNING:
+        if Current_State == STATE_GAME_RUNNING:
             game_state = STATE_GAME_RUNNING
 
         #Muda pra aba de quests
-        elif Backpack_View(screen,mouse_pos,maps,camera) == STATE_QUESTS_VIEW:
+        elif Current_State == STATE_QUESTS_VIEW:
             game_state = STATE_QUESTS_VIEW
 
         #Muda pra aba de configurações
-        elif Backpack_View(screen,mouse_pos,maps,camera) == STATE_CONFIG:
+        elif Current_State == STATE_CONFIG:
             game_state = STATE_CONFIG
         
     elif game_state == STATE_STATUS_VIEW:
@@ -97,16 +97,16 @@ while running:
          pass
     
     elif game_state == STATE_QUESTS_VIEW:
-            Quests_View(screen,mouse_pos,maps,camera)
+            Current_State = Quests_View(screen,mouse_pos,maps,camera)
     
             #Fecha a aba de quests
-            if Quests_View(screen,mouse_pos,maps,camera) == STATE_GAME_RUNNING:
+            if Current_State == STATE_GAME_RUNNING:
                 game_state = STATE_GAME_RUNNING
 
-            elif Quests_View(screen,mouse_pos,maps,camera) == STATE_INVENTORY_OPEN:
+            elif Current_State == STATE_INVENTORY_OPEN:
                 game_state = STATE_INVENTORY_OPEN
 
-            elif Quests_View(screen,mouse_pos,maps,camera) == STATE_CONFIG:
+            elif Current_State == STATE_CONFIG:
                 game_state = STATE_CONFIG
 
     elif game_state == STATE_EQUIPMENT_VIEW:
@@ -114,18 +114,18 @@ while running:
 
     # ingame config
     elif game_state == STATE_CONFIG:
-        Config_View(screen,mouse_pos,maps,camera)
+        Current_State = Config_View(screen,mouse_pos,maps,camera)
 
-        if Config_View(screen,mouse_pos,maps,camera) == STATE_GAME_RUNNING:
+        if Current_State == STATE_GAME_RUNNING:
             game_state = STATE_GAME_RUNNING
 
-        elif Config_View(screen,mouse_pos,maps,camera) == STATE_INVENTORY_OPEN:
+        elif Current_State == STATE_INVENTORY_OPEN:
             game_state = STATE_INVENTORY_OPEN
 
-        elif Config_View(screen,mouse_pos,maps,camera) == STATE_QUESTS_VIEW:
+        elif Current_State == STATE_QUESTS_VIEW:
             game_state = STATE_QUESTS_VIEW
 
-        elif Config_View(screen,mouse_pos,maps,camera) == STATE_CONFIG:
+        elif Current_State == STATE_CONFIG:
             game_state = STATE_CONFIG
 
     # main menu config
