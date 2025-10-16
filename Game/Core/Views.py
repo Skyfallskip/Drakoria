@@ -392,7 +392,6 @@ def Account_Menu_View(screen, mouse_pos,maps):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                return 5
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if username_rect.collidepoint(event.pos):
@@ -401,6 +400,8 @@ def Account_Menu_View(screen, mouse_pos,maps):
                     active_input = "password"
                 else:
                     active_input = None
+
+                # Se estiver logado e usuario ja existir entra direto no map
 
                 if login_button.is_clicked(event):
                         if username_text and password_text:
@@ -415,13 +416,15 @@ def Account_Menu_View(screen, mouse_pos,maps):
                 elif login_button.is_clicked(event):
                       print("Preencha todos os campos")
 
-                if create_button.is_clicked(event):
-                    print("Create Account clicked")
-                    return ""
+                # Se nao exister um usuario com esse username e senha e clicou em criar, pagina de escolher classe e rng da raça
+
+                elif create_button.is_clicked(event) and username_text and password_text:
+                        return [2,None] 
+
                 
                 elif back_button.is_clicked(event):
                     print("Back clicked")
-                    return 0
+                    return [0,None]
 
             if event.type == pygame.KEYDOWN:
                 if active_input == "username":
@@ -450,5 +453,135 @@ def Account_Menu_View(screen, mouse_pos,maps):
         clock.tick(60)
 
 
-def Character_Selection_View(screen, mouse_pos):
-        pass
+def Character_Selection_View(screen, mouse_pos,maps):
+        pygame.font.init()
+        clock = pygame.time.Clock()
+
+        # --- BACKGROUND ---
+
+        background = pygame.image.load(r"Game\Assets\Images\Main_Menu_Backgrond.png")
+        background = pygame.transform.scale(background, (800, 600))
+        screen.blit(background, (0, 0))
+
+        # Menu 
+
+        layer_1 = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Layer_1.png")
+        layer_1 = pygame.transform.scale(layer_1,(700,500))
+        screen.blit(layer_1,(50,50))
+
+        # Buttons
+
+        Continue_button = Button(540, 480, 180, 50, "Continue", (210, 170, 140))
+        Back_button = Button(80, 480, 180, 50, "Back", (210, 170, 140))
+
+        Continue_button.draw(screen)
+        Back_button.draw(screen)
+
+
+
+
+
+
+
+
+
+
+
+
+
+        # Eventos
+        row = False
+        column = 0
+        for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                      pygame.quit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                        #print(mouse_pos)
+                
+                        # Botoes de cada classe x,y
+
+                        # Width 135 Height 130
+
+                        # Warrior
+                                # x 140 - 274 y 77 - 214 Fixed for first row
+
+                        # Mage
+                                # x 334 - 466 y 77 - 214 Fixed for first row
+
+                        # Archer
+                                # x 527 - 661 y 77 - 214 Fixed for first row
+
+                        # Assassin
+                                # x 140 - 274 , Y 237 - 374 Fixed for second row
+
+                        # Priest        
+                                # x 334 - 468 , Y 237 - 374 Fixed for second row
+
+                        # Unknown
+                                # x 527 - 661 , Y 237 - 374 Fixed for second row
+
+                        #elif mouse_pos[0] >= 198 and mouse_pos[0] <= 426 and mouse_pos[1] >= 109 and mouse_pos[1] <= 139:
+                        if mouse_pos[0] >= 140 and mouse_pos[0] <= 274 and mouse_pos[1] >= 77 and mouse_pos[1] <= 214:
+                              #Colocoar um outline, salvar class selection como warrior... bla bla bla
+                                print("Clicou em warrior")
+                                row = True
+                                column = 1
+                                Selected = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Warrior.png")
+                        
+                        elif mouse_pos[0] >= 334 and mouse_pos[0] <= 466 and mouse_pos[1] >= 77 and mouse_pos[1] <= 214:
+                                column = 2
+                                row = True
+                                Selected = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Mage.png")
+
+                                print("Clicou em mage")
+                        
+                        elif mouse_pos[0] >= 527 and mouse_pos[0] <= 661 and mouse_pos[1] >= 77 and mouse_pos[1] <= 214:
+                                row = True
+
+                                column = 3
+                                Selected = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Archer.png")
+
+                                print("Clicou em archer")
+
+                        elif mouse_pos[0] >= 140 and mouse_pos[0] <= 274 and mouse_pos[1] >= 237 and mouse_pos[1] <= 374:
+                                column = 1
+                                Selected = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Assassin.png")
+
+                                print("Clicou em Assassin")
+
+                        elif mouse_pos[0] >= 334 and mouse_pos[0] <= 466 and mouse_pos[1] >= 237 and mouse_pos[1] <= 374:
+                                column = 2
+                                Selected = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Priest.png")
+
+                                print("Clicou em Priest")
+                        
+                        elif mouse_pos[0] >= 527 and mouse_pos[0] <= 661 and mouse_pos[1] >= 237 and mouse_pos[1] <= 374:
+                                column = 3
+                                Selected = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Unknown.png")
+                                print("Clicou em Unknown")
+
+        if row:
+                if column == 1:
+                                screen.blit(Selected,(140,77))
+                elif column == 2:
+                                screen.blit(Selected,(334,77))
+                elif column == 3:
+                                screen.blit(Selected,(527,77))
+        else:
+                if column == 1:
+                                screen.blit(Selected,(140,237))
+                elif column == 2:
+                                screen.blit(Selected,(334,237))
+                elif column == 3:
+                                screen.blit(Selected,(527,237))
+
+
+
+                        
+
+
+
+
+def Character_Race_View():
+      pass
