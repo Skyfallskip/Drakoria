@@ -1,24 +1,23 @@
 import pygame
-from Core.Player_Handler import Player
-from Core.Map_Loader import load_world_maps
-
 
 def handle_player_movement(player, keys, dt):
+    dx, dy = 0, 0
+
     moved = False
     if keys[pygame.K_a]:
-        player.x -= player.speed
+        dx -= player.speed
         player.current_row = 3  # left
         moved = True
     elif keys[pygame.K_d]:
-        player.x += player.speed
+        dx += player.speed
         player.current_row = 2  # right
         moved = True
     elif keys[pygame.K_w]:
-        player.y -= player.speed
+        dy -= player.speed
         player.current_row = 1  # up
         moved = True
     elif keys[pygame.K_s]:
-        player.y += player.speed
+        dy += player.speed
         player.current_row = 0  # down
         moved = True
     if moved:
@@ -29,33 +28,61 @@ def handle_player_movement(player, keys, dt):
             player.animation_timer = 0
     else:
         player.current_frame = 0  # Frame parado
+    
+    return dx, dy
+    
 
-def Collision_Handler(player, maps, dx, dy):
-    # Get player's collision rect
+def Collision_Handler(player, maps, dx, dy, screen=None, camera=None):
+
     player_rect = player.get_player_rect()
-    collision_rects = maps[1]  # Assuming maps[1] contains the collision rectangles
+    collision_rects = maps[1]  
 
-    # Handle horizontal movement collisions (dx)
-    player_rect.x += dx
-    for obstacle_rect in collision_rects:
-        if player_rect.colliderect(obstacle_rect):
-            if dx > 0:  # Moving right
-                player_rect.right = obstacle_rect.left  # Stop at the left side of the obstacle
-            elif dx < 0:  # Moving left
-                player_rect.left = obstacle_rect.right  # Stop at the right side of the obstacle
+    if dx != 0:
+        player_rect.x += dx
+        for obstacle in collision_rects:
+            try:
+                if player_rect.colliderect(obstacle):
+                    if dx > 0:  # Moving right
+                        player_rect.right = obstacle.left
+                    elif dx < 0:  # Moving left
+                        player_rect.left = obstacle.right
+                    break
+            except TypeError as e:
+                print(f"Error with collision rect: {obstacle}, error: {e}")
+                continue
 
-    # Handle vertical movement collisions (dy)
-    player_rect.y += dy
-    for obstacle_rect in collision_rects:
-        if player_rect.colliderect(obstacle_rect):
-            if dy > 0:  # Moving down
-                player_rect.bottom = obstacle_rect.top  # Stop at the top of the obstacle
-            elif dy < 0:  # Moving up
-                player_rect.top = obstacle_rect.bottom  # Stop at the bottom of the obstacle
+    if dy != 0:
+        player_rect.y += dy
+        for obstacle in collision_rects:
+            try:
+                if player_rect.colliderect(obstacle):
+                    if dy > 0:  # Moving down
+                        player_rect.bottom = obstacle.top
+                    elif dy < 0:  # Moving up
+                        player_rect.top = obstacle.bottom
+                    break
+            except TypeError as e:
+                print(f"Error with collision rect: {obstacle}, error: {e}")
+                continue
 
-    # After collision checks, update the player's position
     player.x = player_rect.x
     player.y = player_rect.y
+
+    #debug
+
+    # Debug: Draw collision rectangles (with camera offset)
+    if screen and camera:
+        # Draw player rect in green (convert to screen coordinates)
+        screen_player_rect = camera.apply_rect(player_rect)
+        pygame.draw.rect(screen, (0, 255, 0), screen_player_rect, 2)
+        
+        # Draw collision rects in red (convert to screen coordinates)
+        for obstacle in collision_rects:
+            screen_obstacle_rect = camera.apply_rect(obstacle)
+
+            # Only draw if visible on screen
+            if screen_obstacle_rect.colliderect(pygame.Rect(0, 0, camera.screen_width, camera.screen_height)):
+                pygame.draw.rect(screen, (255, 0, 0), screen_obstacle_rect, 1)
 
 
     
