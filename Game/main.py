@@ -34,9 +34,11 @@ STATE_SETTINGS_MENU = 10
 
 game_state = STATE_MAIN_MENU
 
+
 player = Player(820,800,r"Game/Assets/Sprites/Characters/Mage/Mage_SpriteSheet.png")
 camera = Camera(screen_width, screen_height, 0, 0)
-maps = None  # Carrega os mapas apenas quando o jogo começa
+maps = load_world_maps(r"Tiled_Map_Editor_Stuff\World\Zones.world")
+
 
 # Loop principal do pygame
 running = True
@@ -65,41 +67,52 @@ while running:
         camera.update(player)
 
         player.draw(screen, camera)
+
+    # -------------------------------------------------
     
     elif game_state == STATE_ACCOUNT_MENU:
-        Current_State = Account_Menu_View(screen, mouse_pos,maps)
+        Current_State = Account_Menu_View(screen, mouse_pos,map)
 
-        if Current_State[0] == STATE_GAME_RUNNING:
-            maps = Current_State[1]
+        if Current_State == STATE_GAME_RUNNING:
             game_state = STATE_GAME_RUNNING
         
-        elif Current_State[0] == STATE_MAIN_MENU:
+        elif Current_State == STATE_MAIN_MENU:
             game_state = STATE_MAIN_MENU
 
-        elif Current_State[0] == STATE_CHARACTER_SELECTION:
+        elif Current_State == STATE_CHARACTER_SELECTION:
             game_state = STATE_CHARACTER_SELECTION
+
+    # -------------------------------------------------
+
     
     elif game_state == STATE_CHARACTER_SELECTION:
-        Current_State = Character_Selection_View(screen,mouse_pos,maps)
+        Current_State = Character_Selection_View(screen,mouse_pos)
 
         #Escolheu a classe e clicou em continuar
-        # if Current_State[0] == STATE_CHARACTER_RACE:
-        #     game_state = STATE_CHARACTER_RACE
+        if Current_State == STATE_CHARACTER_RACE:
+            game_state = STATE_CHARACTER_RACE
+            Current_State = Character_Race_View(screen)
 
         #Clicou em Back
-        # elif Current_State[0] == STATE_ACCOUNT_MENU:
-        #     game_state = STATE_ACCOUNT_MENU
+        elif Current_State == STATE_ACCOUNT_MENU:
+            game_state = STATE_ACCOUNT_MENU
+
+    # -------------------------------------------------
+
 
     elif game_state == STATE_CHARACTER_RACE:
-        Current_State = Character_Race_View()
+        Current_State = Character_Race_View(screen)
 
         #Clicou em continuar
-        if Current_State[0] == STATE_GAME_RUNNING:
+        if Current_State == STATE_GAME_RUNNING:
             game_state = STATE_GAME_RUNNING
         
         #Clicou em back
-        elif Current_State[0] == STATE_CHARACTER_SELECTION:
+        elif Current_State == STATE_CHARACTER_SELECTION:
             game_state = STATE_CHARACTER_SELECTION
+
+    # -------------------------------------------------
+
 
     elif game_state == STATE_INVENTORY_OPEN:
         Current_State = Backpack_View(screen,mouse_pos,maps,camera)
@@ -116,11 +129,20 @@ while running:
         elif Current_State == STATE_CONFIG:
             game_state = STATE_CONFIG
         
+    # -------------------------------------------------
+
+
     elif game_state == STATE_STATUS_VIEW:
          pass
     
+    # -------------------------------------------------
+
+
     elif game_state == STATE_SKILLS_VIEW:
          pass
+    
+    # -------------------------------------------------
+
     
     elif game_state == STATE_QUESTS_VIEW:
             Current_State = Quests_View(screen,mouse_pos,maps,camera)
@@ -135,10 +157,15 @@ while running:
             elif Current_State == STATE_CONFIG:
                 game_state = STATE_CONFIG
 
+    # -------------------------------------------------
+
+
     elif game_state == STATE_EQUIPMENT_VIEW:
          pass
 
-    # ingame config
+    # -------------------------------------------------
+
+
     elif game_state == STATE_CONFIG:
         Current_State = Config_View(screen,mouse_pos,maps,camera)
 
@@ -153,6 +180,8 @@ while running:
 
         elif Current_State == STATE_CONFIG:
             game_state = STATE_CONFIG
+
+    # -------------------------------------------------
 
     # main menu config
     elif game_state == STATE_SETTINGS_MENU:

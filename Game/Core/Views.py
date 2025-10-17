@@ -1,5 +1,4 @@
 import pygame
-import os
 from Core.Map_Renderer import render_maps
 from Core.UIs_Handler import draw_game_ui
 from Core.Buttons_Logic import Button
@@ -24,6 +23,11 @@ except:
 
     
 # View do menu principal
+
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 def Main_Menu(screen, width, height, text_color, button_color):
         # Plano de fundo
@@ -66,12 +70,19 @@ def Main_Menu(screen, width, height, text_color, button_color):
 
 # View durante o jogo
 
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 def Game_View(screen, width, height, maps, camera):
         # Renderiza os mapas
         render_maps(screen, maps, camera)
 
         # Desenha a UI do jogo
         draw_game_ui(screen, width, height)
+
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 def Backpack_View(screen,mouse_pos,maps,camera):
@@ -140,6 +151,10 @@ def Backpack_View(screen,mouse_pos,maps,camera):
                 if event.type == pygame.QUIT:
                     pygame.quit()
 
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 def Quests_View(screen,mouse_pos,maps,camera):
         
         # Carregar fontes
@@ -197,10 +212,18 @@ def Quests_View(screen,mouse_pos,maps,camera):
                 if event.type == pygame.QUIT:
                     pygame.quit()
 
-        
+
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 def Stats_View():
         pass
+
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 def Config_View(screen,mouse_pos,maps,camera):
                 
@@ -296,17 +319,22 @@ def Config_View(screen,mouse_pos,maps,camera):
                     pygame.quit()
         
 
+# ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 def Skills_View():
         pass
 
-def Character_Creation_View():
-        pass
+# ----------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 def Main_Menu_Settings_View():
         pass
 
-import pygame
-from Core.Buttons_Logic import Button
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 def Account_Menu_View(screen, mouse_pos,maps):
     pygame.font.init()
@@ -409,7 +437,7 @@ def Account_Menu_View(screen, mouse_pos,maps):
                                 print("Loaded maps:", len(maps))
                                 print(f"Username: {username_text}, Password: {password_text}")
 
-                                return [3,maps]
+                                return 3
                         print("Login clicked")
                         
                 
@@ -419,12 +447,12 @@ def Account_Menu_View(screen, mouse_pos,maps):
                 # Se nao exister um usuario com esse username e senha e clicou em criar, pagina de escolher classe e rng da raça
 
                 elif create_button.is_clicked(event) and username_text and password_text:
-                        return [2,None] 
+                        return 2
 
                 
                 elif back_button.is_clicked(event):
                     print("Back clicked")
-                    return [0,None]
+                    return 0
 
             if event.type == pygame.KEYDOWN:
                 if active_input == "username":
@@ -453,9 +481,11 @@ def Account_Menu_View(screen, mouse_pos,maps):
         clock.tick(60)
 
 
-def Character_Selection_View(screen, mouse_pos,maps):
+# ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+def Character_Selection_View(screen, mouse_pos):
         pygame.font.init()
-        clock = pygame.time.Clock()
 
         # --- BACKGROUND ---
 
@@ -478,20 +508,11 @@ def Character_Selection_View(screen, mouse_pos,maps):
         Back_button.draw(screen)
 
 
-
-
-
-
-
-
-
-
-
-
-
         # Eventos
         row = False
         column = 0
+        global classe
+
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                       pygame.quit()
@@ -527,18 +548,20 @@ def Character_Selection_View(screen, mouse_pos,maps):
                                 print("Clicou em warrior")
                                 row = True
                                 column = 1
+                                classe = "Warrior"
                                 Selected = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Warrior.png")
                         
                         elif mouse_pos[0] >= 334 and mouse_pos[0] <= 466 and mouse_pos[1] >= 77 and mouse_pos[1] <= 214:
                                 column = 2
                                 row = True
+                                classe = "Mage"
                                 Selected = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Mage.png")
 
                                 print("Clicou em mage")
                         
                         elif mouse_pos[0] >= 527 and mouse_pos[0] <= 661 and mouse_pos[1] >= 77 and mouse_pos[1] <= 214:
                                 row = True
-
+                                classe = "Archer"
                                 column = 3
                                 Selected = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Archer.png")
 
@@ -546,20 +569,35 @@ def Character_Selection_View(screen, mouse_pos,maps):
 
                         elif mouse_pos[0] >= 140 and mouse_pos[0] <= 274 and mouse_pos[1] >= 237 and mouse_pos[1] <= 374:
                                 column = 1
+                                classe = "Assassin"
                                 Selected = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Assassin.png")
 
                                 print("Clicou em Assassin")
 
                         elif mouse_pos[0] >= 334 and mouse_pos[0] <= 466 and mouse_pos[1] >= 237 and mouse_pos[1] <= 374:
                                 column = 2
+                                classe = "Priest"
                                 Selected = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Priest.png")
 
                                 print("Clicou em Priest")
                         
                         elif mouse_pos[0] >= 527 and mouse_pos[0] <= 661 and mouse_pos[1] >= 237 and mouse_pos[1] <= 374:
                                 column = 3
+                                classe = "None"
                                 Selected = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Unknown.png")
                                 print("Clicou em Unknown")
+                        
+                        if Back_button.is_clicked(event):
+                               return 1
+
+                        if Continue_button.is_clicked(event) and classe:
+                                print(classe)
+                                return 2.5
+                        
+                        elif Continue_button.is_clicked(event) and classe == None:
+                                print(classe)
+                                print("Escholha uma classe")
+
 
         if row:
                 if column == 1:
@@ -583,5 +621,80 @@ def Character_Selection_View(screen, mouse_pos,maps):
 
 
 
-def Character_Race_View():
-      pass
+def Character_Race_View(screen):
+        pygame.font.init()
+
+        background = pygame.image.load(r"Game\Assets\Images\Main_Menu_Backgrond.png")
+        background = pygame.transform.scale(background, (800, 600))
+        screen.blit(background, (0, 0))
+
+        layer_1 = pygame.image.load(r"Game\Assets\UIs\Character_Race\Base.png")
+        layer_1 = pygame.transform.scale(layer_1,(700,500))
+        screen.blit(layer_1,(50,50))
+
+
+        font_atribute_name = pygame.font.Font(r"Game\Assets\Font\Adventurer.ttf", 20)
+        font_atribute_value = pygame.font.Font(r"Game\Assets\Font\Adventurer.ttf", 20)
+
+        health_text = font_atribute_name.render("Health", True, (0,0,0))
+        screen.blit(health_text, (102, 160))
+
+        health_value = font_atribute_value.render("100", True, (0,0,0))
+        screen.blit(health_value, (170, 160))
+
+
+        Mana_text = font_atribute_name.render("Mana", True, (0,0,0))
+        Mana_value = font_atribute_value.render("100", True, (0,0,0))
+        
+
+        Stamina_text = font_atribute_name.render("Stamina", True, (0,0,0))
+        Stamina_value = font_atribute_value.render("100", True, (0,0,0))
+
+        Strength_text = font_atribute_name.render("Strength", True, (0,0,0))
+        Strength_value = font_atribute_value.render("100", True, (0,0,0))
+
+        Defesa_text = font_atribute_name.render("Defesa", True, (0,0,0))
+        Defesa_value = font_atribute_value.render("100", True, (0,0,0))
+
+        Agility_text = font_atribute_name.render("Agility", True, (0,0,0))
+        Agility_value = font_atribute_value.render("100", True, (0,0,0))
+
+        intelligence_text = font_atribute_name.render("intelligence", True, (0,0,0))
+        intelligence_value = font_atribute_value.render("100", True, (0,0,0))
+
+
+
+        font_title = pygame.font.Font(r"Game\Assets\Font\Adventurer.ttf", 50)
+        title_text = font_title.render("Character Race", True, (0, 0, 0))
+        screen.blit(title_text, (240, 85))
+
+        Continue_button = Button(540, 480, 180, 50, "Continue", (210, 170, 140))
+        Back_button = Button(80, 480, 180, 50, "Back", (210, 170, 140))
+
+        Continue_button.draw(screen)
+        Back_button.draw(screen)
+
+
+
+
+        for event in pygame.event.get():
+               
+               if event.type == pygame.QUIT:
+                      pygame.quit()
+
+               if event.type == pygame.MOUSEBUTTONDOWN:         
+                      
+                      if Back_button.is_clicked(event):
+                             return 2
+                      
+                      if Continue_button.is_clicked(event):
+                             return 3
+                             
+        return "Lorem Ipsun"
+                
+        
+
+
+
+
+
