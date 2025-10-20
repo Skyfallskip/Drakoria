@@ -3,10 +3,13 @@ from Core.Views import *
 from Core.Player_Handler import Player
 from Core.Camera_Handler import Camera
 from Core.Movement_Handler import handle_player_movement, Collision_Handler
+from Core.Music_Handler import play_music, stop_music
 
 
-# Inicializa o pygame
+# Inicializa os modules
 pygame.init()
+pygame.mixer.init()
+menu_music_playing = False
 
 # Configura a tela
 screen_width = 800
@@ -14,10 +17,11 @@ screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Drakoria")
 
+icon = pygame.image.load(r"Game\Assets\Images\icon.png").convert_alpha()
+pygame.display.set_icon(icon)
+
 # Cores
 GRAY = (128, 128, 128)
-BLACK = (0, 0, 0)
-ORANGE = (255, 165, 0)
 
 STATE_MAIN_MENU = 0
 STATE_ACCOUNT_MENU = 1
@@ -50,11 +54,16 @@ while running:
 
     # --------------- Estados do jogo ----------------
 
-    if game_state == STATE_MAIN_MENU:
-        start_btn, settings_btn, exit_btn = Main_Menu(screen, screen_width, screen_height, BLACK, ORANGE)
+    if game_state == STATE_MAIN_MENU: 
+        start_btn, settings_btn, exit_btn = Main_Menu(screen, screen_width, screen_height)
+        play_music(str(game_state))
+        
+
+
    
     elif game_state == STATE_GAME_RUNNING:
         keys = pygame.key.get_pressed()
+        stop_music()
 
         if maps:
             Game_View(screen, screen_width, screen_height, maps, camera)
@@ -72,6 +81,7 @@ while running:
     
     elif game_state == STATE_ACCOUNT_MENU:
         Current_State = Account_Menu_View(screen, mouse_pos,map)
+        stop_music()
 
         if Current_State == STATE_GAME_RUNNING:
             game_state = STATE_GAME_RUNNING
@@ -87,6 +97,7 @@ while running:
     
     elif game_state == STATE_CHARACTER_SELECTION:
         Current_State = Character_Selection_View(screen,mouse_pos)
+        stop_music()
 
         #Escolheu a classe e clicou em continuar
         if Current_State == STATE_CHARACTER_RACE:
@@ -102,6 +113,7 @@ while running:
 
     elif game_state == STATE_CHARACTER_RACE:
         Current_State = Character_Race_View(screen)
+        stop_music()
 
         #Clicou em continuar
         if Current_State == STATE_GAME_RUNNING:
@@ -116,6 +128,7 @@ while running:
 
     elif game_state == STATE_INVENTORY_OPEN:
         Current_State = Backpack_View(screen,mouse_pos,maps,camera)
+        stop_music()
 
         #Fecha o inventario
         if Current_State == STATE_GAME_RUNNING:
@@ -133,41 +146,45 @@ while running:
 
 
     elif game_state == STATE_STATUS_VIEW:
+         stop_music()
          pass
     
     # -------------------------------------------------
 
 
     elif game_state == STATE_SKILLS_VIEW:
+         stop_music()
          pass
     
     # -------------------------------------------------
 
     
     elif game_state == STATE_QUESTS_VIEW:
-            Current_State = Quests_View(screen,mouse_pos,maps,camera)
-    
-            #Fecha a aba de quests
-            if Current_State == STATE_GAME_RUNNING:
-                game_state = STATE_GAME_RUNNING
+        Current_State = Quests_View(screen,mouse_pos,maps,camera)
+        stop_music()
+        #Fecha a aba de quests
+        if Current_State == STATE_GAME_RUNNING:
+            game_state = STATE_GAME_RUNNING
 
-            elif Current_State == STATE_INVENTORY_OPEN:
-                game_state = STATE_INVENTORY_OPEN
+        elif Current_State == STATE_INVENTORY_OPEN:
+            game_state = STATE_INVENTORY_OPEN
 
-            elif Current_State == STATE_CONFIG:
-                game_state = STATE_CONFIG
+        elif Current_State == STATE_CONFIG:
+            game_state = STATE_CONFIG
 
     # -------------------------------------------------
 
 
     elif game_state == STATE_EQUIPMENT_VIEW:
-         pass
+        stop_music()
+        pass
 
     # -------------------------------------------------
 
 
     elif game_state == STATE_CONFIG:
         Current_State = Config_View(screen,mouse_pos,maps,camera)
+        stop_music()
 
         if Current_State == STATE_GAME_RUNNING:
             game_state = STATE_GAME_RUNNING
@@ -185,7 +202,8 @@ while running:
 
     # main menu config
     elif game_state == STATE_SETTINGS_MENU:
-         pass
+        stop_music()
+        pass
 
 
 

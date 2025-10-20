@@ -1,15 +1,22 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import sessionmaker, scoped_session, declarative_base
+from models import *
 
-DATABASE_URL = "sqlite:///../drakoria.db"  
+DATABASE_URL = "sqlite:///drakoria.db"  
 
 engine = create_engine(
     DATABASE_URL, 
-    echo=True,       # Mostra os SQLs no terminal
+    echo=True,       
     future=True
 )
 
-Base = declarative_base()
+# Base = declarative_base()
+
+Base.metadata.create_all(bind=engine)
+
+# inspector = inspect(engine)
+# tables = inspector.get_table_names()
+# print("Tables:", tables)
 
 SessionLocal = scoped_session(
     sessionmaker(bind=engine, autoflush=False, autocommit=False)

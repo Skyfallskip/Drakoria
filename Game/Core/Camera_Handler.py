@@ -18,7 +18,7 @@ class Camera:
 
     def apply_rect(self, rect):
 
-        return pygame.Rect(rect.x - self.x, rect.y - self.y, rect.width, rect.height)
+        return pygame.Rect((rect.x - self.x)-32, (rect.y - self.y)-15, rect.width, rect.height)
 
     def apply_pos(self, x, y):
 
