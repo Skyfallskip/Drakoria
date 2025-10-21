@@ -5,6 +5,7 @@ from Core.Camera_Handler import Camera
 from Core.Movement_Handler import handle_player_movement, Collision_Handler
 from Core.Music_Handler import play_music, stop_music
 from Core.Inventory_Handler import inventory_page
+from Core.Music_Handler import play_music, stop_music
 
 
 # Inicializa os modules
@@ -17,10 +18,6 @@ screen_width = 800
 screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Drakoria")
-
-
-icon = pygame.image.load(r"Game\Assets\Images\icon.png").convert_alpha()
-pygame.display.set_icon(icon)
 
 # Cores
 GRAY = (128, 128, 128)
@@ -82,8 +79,7 @@ while running:
     # -------------------------------------------------
     
     elif game_state == STATE_ACCOUNT_MENU:
-        Current_State = Account_Menu_View(screen,map)
-        stop_music()
+        Current_State = Account_Menu_View(screen, mouse_pos,map)
 
         if Current_State == STATE_GAME_RUNNING:
             game_state = STATE_GAME_RUNNING

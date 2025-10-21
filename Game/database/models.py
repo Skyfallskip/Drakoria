@@ -1,8 +1,9 @@
-from session import Base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship,  declarative_base
 from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, JSON
 
 #Banco de dados sqlalchemy
+
+Base = declarative_base()
 
 #Tabelas do banco de dados
 
@@ -18,30 +19,45 @@ class personagem(Base):
     #customizacao = Column(JSON)  # Exemplo: {"cabelo": "curto", etc} 
 
     # Relacionamentos 
-    id_conta = Column(Integer, ForeignKey("Conta.id_Conta"))
-    conta = relationship("Conta", back_populates="personagens")
+    id_conta = Column(Integer, ForeignKey("conta.id_Conta"))
+    conta = relationship("conta", back_populates="personagens")
 
     # id_trabalho = Column(Integer, ForeignKey("Trabalho.id_Trabalho"))
     # trabalho = relationship("Trabalho")
 
     status = relationship("status", uselist=False, back_populates="personagem")
 
-    id_classe = Column(Integer, ForeignKey("Classe.id_Classe"))
-    classe = relationship("Classe", back_populates="personagens")
+    id_classe = Column(Integer, ForeignKey("classe.id_Classe"))
+    classe = relationship("classe", back_populates="personagens")
 
-    inventory = relationship("Inventory", uselist=False, back_populates="personagem")
+    inventory = relationship("inventory", uselist=False, back_populates="personagem")
 
-    quests = relationship("Quest", secondary="Quest_Personagem", back_populates="personagens")
+    quests = relationship("quest", secondary="quest_personagem", back_populates="personagens")
 
 class inventory(Base):
     __tablename__ = "inventory"
 
     id_Inventory = Column(Integer, primary_key=True, index=True, autoincrement=True)
     items = Column(JSON)  # Dicionario de itens no inventario em formato nome : quantidade
-    capacity = Column(Integer, default=100)  # Capacidade maxima do inventario
 
     personagem_id = Column(Integer, ForeignKey("personagens.id_Personagem"))
-    personagem = relationship("Personagem", back_populates="inventory")
+    personagem = relationship("personagem", back_populates="inventory")
+
+    pages = relationship("inventory_page", back_populates="inventory")
+
+class inventory_page(Base):
+    __tablename__ = "inventory_page"
+
+    id_InvPage = Column(Integer, primary_key = True, index = True, autoincrement=True)
+    capacity = Column(Integer, default = 19)
+    page_number = Column(Integer, nullable=False)
+
+    inventory_id = Column(Integer, ForeignKey("inventory.id_Inventory"))
+    inventory = relationship("inventory", back_populates="inventory_page")
+
+    item_id = Column(Integer, ForeignKey("item.id_Item"))
+    item = relationship("item")
+
 
 class status(Base):
     __tablename__ = "status"
@@ -66,7 +82,9 @@ class status(Base):
     # Relacionamento um-para-um com Personagem
 
     personagem_id = Column(Integer, ForeignKey("personagens.id_Personagem"))
-    personagem = relationship("Personagem", back_populates="status")
+    personagem = relationship("personagem", back_populates="status")
+
+    monster = relationship("monster", uselist=False, back_populates="status")
 
 
 # Talvez remover
@@ -78,17 +96,17 @@ class status(Base):
 #     descricao = Column(String, nullable=False)
 #     requisitos = Column(JSON)
 
-class Conta(Base):
-    __tablename__ = "Conta"
+class conta(Base):
+    __tablename__ = "conta"
 
     id_Conta = Column(Integer, primary_key=True, index=True, autoincrement=True)
     username = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
-    email = Column(String, unique=True, nullable=False)
-    personagens = relationship("Personagem", back_populates="conta")
+    # email = Column(String, unique=True, nullable=False)
+    personagens = relationship("personagem", back_populates="conta")
 
-class Quest(Base):
-    __tablename__ = "Quest"
+class quest(Base):
+    __tablename__ = "quest"
 
     id_Quest = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String, unique=True, nullable=False)
@@ -98,19 +116,19 @@ class Quest(Base):
     is_repeatable = Column(Boolean, default=False)
     Tipo = Column(String, nullable=False)  # Principal, Secundaria, etc
 
-    personagens = relationship("Quest_Personagem", back_populates="quest")
+    personagens = relationship("quest_personagem", back_populates="quest")
 
-class Quest_Personagem(Base):
+class quest_personagem(Base):
     #Table associativa para o relacionamento muitos-para-muitos entre Personagem e Quest
-    __tablename__ = "Quest_Personagem"
+    __tablename__ = "quest_personagem"
 
     id_Quest_Personagem = Column(Integer, primary_key=True, index=True, autoincrement=True)
     personagem_id = Column(Integer, ForeignKey("personagens.id_Personagem"))
-    quest_id = Column(Integer, ForeignKey("Quest.id_Quest"))
+    quest_id = Column(Integer, ForeignKey("quest.id_Quest"))
     quest_status = Column(String, nullable=False)  # Ativa, Completa, Falhada
 
     personagem = relationship("Personagem", back_populates="quests")
-    quest = relationship("Quest", back_populates="personagens")
+    quest = relationship("quest", back_populates="personagens")
 
 class npc(Base):
     __tablename__ = "npc"
@@ -133,10 +151,10 @@ class classe(Base):
     #debuffs = Column(JSON)  # Debuffs passivos da classe
     #requisitos = Column(JSON)  # Requisitos para escolher a classe, exemplo: {"level": 5, "strength": 15}
     
-    personagens = relationship("Personagem", back_populates="classe")
+    personagens = relationship("personagem", back_populates="classe")
 
-class Monster(Base):
-    __tablename__ = "Monster"
+class monster(Base):
+    __tablename__ = "monster"
 
     id_Monster = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String, unique=True, nullable=False)
@@ -148,22 +166,22 @@ class Monster(Base):
     Rank_monster = Column(String, nullable=False)  # Ex: Boss, Elite, Comum
 
     #Relacionamentos
-    status = relationship("Status", uselist=False, back_populates="monster")
-    id_status = Column(Integer, ForeignKey("Status.id_Status"))
+    status = relationship("status", uselist=False, back_populates="monster")
+    id_status = Column(Integer, ForeignKey("status.id_Status"))
 
     __mapper_args__ = {
-        'polymorphic_identity': 'Monster',
+        'polymorphic_identity': 'monster',
         'polymorphic_on': Rank_monster
     }
 
 
-class boss(Monster):
+class boss(monster):
     __tablename__ = "boss"
     __mapper_args__ = {
         'polymorphic_identity': 'boss',
     }
 
-    id_Boss = Column(Integer, ForeignKey("Monster.id_Monster"), primary_key=True)
+    id_Boss = Column(Integer, ForeignKey("monster.id_Monster"), primary_key=True)
     special_abilities = Column(JSON)  # Habilidades especiais do boss
     spawn_conditions = Column(JSON)  # Condições para o boss aparecer, exemplo: {"time": "night", "event": "eclipse"}
 
@@ -185,7 +203,7 @@ class item(Base):
     drop_chance = Column(Float, default=0.0)  # Chance de dropar o item de um monstro
 
     __mapper_args__ = {
-        'polymorphic_identity': 'Item',
+        'polymorphic_identity': 'item',
         'polymorphic_on': item_type
     }
 
@@ -196,26 +214,26 @@ class weapon(item):
         'polymorphic_identity': 'weapon',
     }
 
-    id_Weapon = Column(Integer, ForeignKey("Item.id_Item"), primary_key=True)
+    id_Weapon = Column(Integer, ForeignKey("item.id_Item"), primary_key=True)
     damage = Column(Float, nullable=False)  # Dano base da arma
     weapon_type = Column(String, nullable=False)  # Ex: Espada, Arco, Cajado, etc
     range_weapon = Column(Integer, default=1)  # Alcance da arma
     Classe_Weapon = Column(String, nullable=False)  # Classe que pode usar a arma
     attack_speed = Column(Float, default=1.0)  # Velocidade de ataque
 
-# class equipament(item):
-#     __tablename__ = "equipament"
+class equipament(item):
+    __tablename__ = "equipament"
 
-#     __mapper_args__ = {
-#         'polymorphic_identity': 'Equipament',
-#     }
+    __mapper_args__ = {
+        'polymorphic_identity': 'equipament',
+    }
 
-#     id_Equipament = Column(Integer, ForeignKey("Item.id_Item"), primary_key=True)
-#     equip_type = Column(String, nullable=False)  # Ex: Capacete, Peitoral, Botas, etc
-#     stat_bonus = Column(JSON)  # Bônus de status fornecidos pelo equipamento
-#     slot = Column(String, nullable=False)  # Slot onde o equipamento é usado, ex: cabeça, torso, pernas, etc
-#     Classe_Equipament = Column(String, nullable=False)  # Classe que pode usar o equipamento
-#     set_bonus = Column(JSON)  # Bônus de conjunto, exemplo: {"2 peças": {"strength_bonus": 5}, "4 peças": {"critical_chance": 10}}
+    id_Equipament = Column(Integer, ForeignKey("item.id_Item"), primary_key=True)
+    equip_type = Column(String, nullable=False)  # Ex: Capacete, Peitoral, Botas, etc
+    stat_bonus = Column(JSON)  # Bônus de status fornecidos pelo equipamento
+    slot = Column(String, nullable=False)  # Slot onde o equipamento é usado, ex: cabeça, torso, pernas, etc
+    Classe_Equipament = Column(String, nullable=False)  # Classe que pode usar o equipamento
+    set_bonus = Column(JSON)  # Bônus de conjunto, exemplo: {"2 peças": {"strength_bonus": 5}, "4 peças": {"critical_chance": 10}}
 
 class consumable(item):
     __tablename__ = "consumable"
@@ -224,7 +242,7 @@ class consumable(item):
         'polymorphic_identity': 'consumable',
     }
 
-    id_Consumable = Column(Integer, ForeignKey("Item.id_Item"), primary_key=True)
+    id_Consumable = Column(Integer, ForeignKey("item.id_Item"), primary_key=True)
     effect = Column(JSON)  # Efeito do consumível, exemplo: {"health_restore": 50}
     duration = Column(Integer, default=0)  # Duração do efeito em segundos, 0 se for instantâneo
     cooldown = Column(Integer, default=0)  # Tempo de recarga antes de poder usar novamente
@@ -235,9 +253,9 @@ class skill(item):
 
     __mapper_args__ = {
         'polymorphic_identity': 'skill',
-    }
+    }   
 
-    id_Skill = Column(Integer, ForeignKey("Item.id_Item"), primary_key=True)
+    id_Skill = Column(Integer, ForeignKey("item.id_Item"), primary_key=True)
     cost = Column(Float, nullable=False)  # Custo de mana ou stamina para lançar a habilidade
     skill_type = Column(String, nullable=False)  # Ex: Ataque, Cura, Buff, Debuff, etc
     power = Column(Float, nullable=False)  # Poder da habilidade, pode ser dano ou cura
