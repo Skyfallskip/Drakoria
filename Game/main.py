@@ -3,10 +3,14 @@ from Core.Views import *
 from Core.Player_Handler import Player
 from Core.Camera_Handler import Camera
 from Core.Movement_Handler import handle_player_movement, Collision_Handler
+from Core.Music_Handler import play_music, stop_music
+from Core.Inventory_Handler import inventory_page
 
 
-# Inicializa o pygame
+# Inicializa os modules
 pygame.init()
+pygame.mixer.init()
+menu_music_playing = False
 
 # Configura a tela
 screen_width = 800
@@ -14,10 +18,12 @@ screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Drakoria")
 
+
+icon = pygame.image.load(r"Game\Assets\Images\icon.png").convert_alpha()
+pygame.display.set_icon(icon)
+
 # Cores
 GRAY = (128, 128, 128)
-BLACK = (0, 0, 0)
-ORANGE = (255, 165, 0)
 
 STATE_MAIN_MENU = 0
 STATE_ACCOUNT_MENU = 1
@@ -50,11 +56,16 @@ while running:
 
     # --------------- Estados do jogo ----------------
 
-    if game_state == STATE_MAIN_MENU:
-        start_btn, settings_btn, exit_btn = Main_Menu(screen, screen_width, screen_height, BLACK, ORANGE)
+    if game_state == STATE_MAIN_MENU: 
+        start_btn, settings_btn, exit_btn = Main_Menu(screen, screen_width, screen_height)
+        play_music(str(game_state))
+        
+
+
    
     elif game_state == STATE_GAME_RUNNING:
         keys = pygame.key.get_pressed()
+        stop_music()
 
         if maps:
             Game_View(screen, screen_width, screen_height, maps, camera)
@@ -71,7 +82,8 @@ while running:
     # -------------------------------------------------
     
     elif game_state == STATE_ACCOUNT_MENU:
-        Current_State = Account_Menu_View(screen, mouse_pos,map)
+        Current_State = Account_Menu_View(screen,map)
+        stop_music()
 
         if Current_State == STATE_GAME_RUNNING:
             game_state = STATE_GAME_RUNNING
@@ -87,6 +99,7 @@ while running:
     
     elif game_state == STATE_CHARACTER_SELECTION:
         Current_State = Character_Selection_View(screen,mouse_pos)
+        stop_music()
 
         #Escolheu a classe e clicou em continuar
         if Current_State == STATE_CHARACTER_RACE:
@@ -102,6 +115,7 @@ while running:
 
     elif game_state == STATE_CHARACTER_RACE:
         Current_State = Character_Race_View(screen)
+        stop_music()
 
         #Clicou em continuar
         if Current_State == STATE_GAME_RUNNING:
@@ -116,6 +130,7 @@ while running:
 
     elif game_state == STATE_INVENTORY_OPEN:
         Current_State = Backpack_View(screen,mouse_pos,maps,camera)
+        stop_music()
 
         #Fecha o inventario
         if Current_State == STATE_GAME_RUNNING:
@@ -133,41 +148,45 @@ while running:
 
 
     elif game_state == STATE_STATUS_VIEW:
+         stop_music()
          pass
     
     # -------------------------------------------------
 
 
     elif game_state == STATE_SKILLS_VIEW:
+         stop_music()
          pass
     
     # -------------------------------------------------
 
     
     elif game_state == STATE_QUESTS_VIEW:
-            Current_State = Quests_View(screen,mouse_pos,maps,camera)
-    
-            #Fecha a aba de quests
-            if Current_State == STATE_GAME_RUNNING:
-                game_state = STATE_GAME_RUNNING
+        Current_State = Quests_View(screen,mouse_pos,maps,camera)
+        stop_music()
+        #Fecha a aba de quests
+        if Current_State == STATE_GAME_RUNNING:
+            game_state = STATE_GAME_RUNNING
 
-            elif Current_State == STATE_INVENTORY_OPEN:
-                game_state = STATE_INVENTORY_OPEN
+        elif Current_State == STATE_INVENTORY_OPEN:
+            game_state = STATE_INVENTORY_OPEN
 
-            elif Current_State == STATE_CONFIG:
-                game_state = STATE_CONFIG
+        elif Current_State == STATE_CONFIG:
+            game_state = STATE_CONFIG
 
     # -------------------------------------------------
 
 
     elif game_state == STATE_EQUIPMENT_VIEW:
-         pass
+        stop_music()
+        pass
 
     # -------------------------------------------------
 
 
     elif game_state == STATE_CONFIG:
         Current_State = Config_View(screen,mouse_pos,maps,camera)
+        stop_music()
 
         if Current_State == STATE_GAME_RUNNING:
             game_state = STATE_GAME_RUNNING
@@ -185,7 +204,8 @@ while running:
 
     # main menu config
     elif game_state == STATE_SETTINGS_MENU:
-         pass
+        stop_music()
+        pass
 
 
 
@@ -211,45 +231,30 @@ while running:
         
         #Funciona com sorte e com magica
         elif game_state == STATE_GAME_RUNNING:
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
-                                
-                # NAO MEXE NISSO AQUI PELO AMOR DE DEUS
+                
                 sidebar_x = 22
                 sidebar_y = 200
                 sidebar_width = 50   # largura do item
                 sidebar_height = 55  # altura do item
 
-                print(mouse_pos[0])
-                print(mouse_pos[1])
-
-
-                #pygame.draw.rect(screen,BLACK,(20,340,50,55)) # debug (x,y,width,height)
+                        #pygame.draw.rect(screen,BLACK,(20,340,50,55)) # debug (x,y,width,height)
                 if (sidebar_x <= mouse_pos[0] <= sidebar_x + sidebar_width and
-                    sidebar_y <= mouse_pos[1] <= sidebar_y + sidebar_height):
-                    print("Clicou na mochila")
-                    game_state = STATE_INVENTORY_OPEN
-                    
+                            sidebar_y <= mouse_pos[1] <= sidebar_y + sidebar_height):
+                            print("Clicou na mochila")
+                            game_state = STATE_INVENTORY_OPEN
+                            
 
                 elif (sidebar_x <= mouse_pos[0] <= sidebar_x + sidebar_width and
-                    (sidebar_y + sidebar_height) + 15 <= mouse_pos[1] <= sidebar_y + sidebar_height * 2):
-                    game_state = STATE_CONFIG
-                    print("Clicou nas configurações")
+                            (sidebar_y + sidebar_height) + 15 <= mouse_pos[1] <= sidebar_y + sidebar_height * 2):
+                            game_state = STATE_CONFIG
+                            print("Clicou nas configurações")
 
                 elif (sidebar_x <= mouse_pos[0] <= sidebar_x + sidebar_width and
-                    (sidebar_y + sidebar_height * 2) + 30 <= mouse_pos[1] <= (sidebar_y + sidebar_height * 3) + 30):
-                    game_state = STATE_QUESTS_VIEW
-                    print("Clicou nas quests")
-
-
-                hotbar_y = 515
-                hotbar_x = 120
-                for i in range(10):
-                                slot_x = hotbar_x + (i * 53)
-                                if (slot_x <= mouse_pos[0] <= slot_x + 53 and 
-                                    hotbar_y <= mouse_pos[1] <= hotbar_y + 60):
-                                    print(f"Hotbar slot {i+1} clicked!")
-        
+                            (sidebar_y + sidebar_height * 2) + 30 <= mouse_pos[1] <= (sidebar_y + sidebar_height * 3) + 30):
+                            game_state = STATE_QUESTS_VIEW
+                            print("Clicou nas quests")
+        elif game_state == STATE_INVENTORY_OPEN:
+            
 
                  
 
