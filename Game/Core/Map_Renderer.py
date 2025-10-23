@@ -7,12 +7,13 @@ import pytmx
 def render_maps(screen, maps, camera):
     for m in maps[0]:
         tmx = m["tmx"]
-        offset_x = m["x"] #* tmx.tilewidth Isso aq q tava causando o erro kkkkkkkkkkkkkkkkkkkkkkkkkkkk
-        offset_y = m["y"] #* tmx.tileheight
+        offset_x = m["x"] 
+        offset_y = m["y"]
 
         for layer in tmx.visible_layers:
             if hasattr(layer, "tiles"):
                 for x, y, gid in layer.tiles():
+                    
                     # Se já veio como Surface
                     if isinstance(gid, pygame.Surface):
                         tile = gid

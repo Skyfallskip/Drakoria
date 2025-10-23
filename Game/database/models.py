@@ -20,9 +20,6 @@ class quest_personagem(Base):
     quest = relationship("quest", back_populates="quest_personagem")
 
 
-from sqlalchemy.orm import declarative_base, relationship
-from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, JSON
-
 Base = declarative_base()
 
 class personagem(Base):
