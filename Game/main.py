@@ -4,7 +4,6 @@ from Core.Player_Handler import Player
 from Core.Camera_Handler import Camera
 from Core.Movement_Handler import handle_player_movement, Collision_Handler
 from Core.Music_Handler import play_music, stop_music
-from Core.Inventory_Handler import inventory_page
 from Core.Music_Handler import play_music, stop_music
 
 
@@ -97,29 +96,21 @@ while running:
         Current_State = Character_Selection_View(screen,mouse_pos)
         stop_music()
 
-        #Escolheu a classe e clicou em continuar
-        if Current_State == STATE_CHARACTER_RACE:
-            game_state = STATE_CHARACTER_RACE
-            Current_State = Character_Race_View(screen)
 
         #Clicou em Back
-        elif Current_State == STATE_ACCOUNT_MENU:
+        if Current_State == STATE_ACCOUNT_MENU:
             game_state = STATE_ACCOUNT_MENU
-
-    # -------------------------------------------------
-
-
-    elif game_state == STATE_CHARACTER_RACE:
-        Current_State = Character_Race_View(screen)
-        stop_music()
-
-        #Clicou em continuar
-        if Current_State == STATE_GAME_RUNNING:
-            game_state = STATE_GAME_RUNNING
         
-        #Clicou em back
-        elif Current_State == STATE_CHARACTER_SELECTION:
-            game_state = STATE_CHARACTER_SELECTION
+        elif Current_State == STATE_GAME_RUNNING:
+                    player_sprite = Sprite_Chooser(selected_class)
+                    player = Player(820, 800, player_sprite)
+                    camera = Camera(screen_width, screen_height, 0, 0)
+                    game_state = STATE_GAME_RUNNING
+         
+
+
+
+
 
     # -------------------------------------------------
 
@@ -249,7 +240,6 @@ while running:
                             (sidebar_y + sidebar_height * 2) + 30 <= mouse_pos[1] <= (sidebar_y + sidebar_height * 3) + 30):
                             game_state = STATE_QUESTS_VIEW
                             print("Clicou nas quests")
-        elif game_state == STATE_INVENTORY_OPEN:
             
 
                  

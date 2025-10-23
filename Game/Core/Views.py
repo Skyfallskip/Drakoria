@@ -730,7 +730,16 @@ def Character_Selection_View(screen, mouse_pos):
 
                         if Continue_button.is_clicked(event) and selected_class:
                                 print(selected_class)
-                                return 2.5
+                                global username_text, password_text
+                                spritepath = Sprite_Chooser(selected_class)
+                                with SessionLocal() as db:
+                                        success, msg = crud.create_account(db, username_text, password_text,spritepath)
+
+                                        print(msg)
+                                        if success:
+                                                return 3,selected_class
+                                        else:
+                                                return msg,None
 
                         elif Continue_button.is_clicked(event) and selected_class == None:
                                 print(selected_class)
@@ -752,120 +761,27 @@ def Character_Selection_View(screen, mouse_pos):
                 elif selected_column == 3:
                                 screen.blit(highlighted,(527,237))
 
+        return None, selected_class
 
 
-                        
+def Sprite_Chooser(selected_class):
 
+        class_sprites = {
+                "Warrior" : "Game\Assets\Sprites\Characters\Warrior\Warrior_Sprite_Sheet.png",
+                "Mage" : "Game\Assets\Sprites\Characters\Mage\Mage_SpriteSheet.png"
+        }
 
+        try:
+                if selected_class in class_sprites:
+                        return class_sprites[selected_class]
+                else:
+                        print("Não tem Sprite")
+                        raise Exception
 
-
-def Character_Race_View(screen):
-        pygame.font.init()
-
-        background = pygame.image.load(r"Game\Assets\Images\Main_Menu_Backgrond.png")
-        background = pygame.transform.scale(background, (800, 600))
-        screen.blit(background, (0, 0))
-
-        layer_1 = pygame.image.load(r"Game\Assets\UIs\Character_Race\Base.png")
-        layer_1 = pygame.transform.scale(layer_1,(700,500))
-        screen.blit(layer_1,(50,50))
-
-
-        font_atribute_name = pygame.font.Font(r"Game\Assets\Font\Adventurer.ttf", 20)
-        font_atribute_value = pygame.font.Font(r"Game\Assets\Font\Adventurer.ttf", 20)
-
-        # Atributos base da classe
-
-        health_text = font_atribute_name.render("Health:", True, (0,0,0))
-        screen.blit(health_text, (102, 160))
-
-        health_value = font_atribute_value.render("100", True, (0,0,0))
-        screen.blit(health_value, (170, 160))
-
-        Mana_text = font_atribute_name.render("Mana:", True, (0,0,0))
-        screen.blit(Mana_text, (102, 200))
-
-        Mana_value = font_atribute_value.render("100", True, (0,0,0))
-        screen.blit(Mana_value, (170, 200))
-
-        Stamina_text = font_atribute_name.render("Stamina:", True, (0,0,0))
-        screen.blit(Stamina_text, (102, 240))
-
-        Stamina_value = font_atribute_value.render("100", True, (0,0,0))
-        screen.blit(Stamina_value, (180, 240))
-
-        Strength_text = font_atribute_name.render("Strength:", True, (0,0,0))
-        screen.blit(Strength_text, (102, 280))
-
-        Strength_value = font_atribute_value.render("100", True, (0,0,0))
-        screen.blit(Strength_value, (190, 280))
-
-        Defesa_text = font_atribute_name.render("Defesa:", True, (0,0,0))
-        screen.blit(Defesa_text, (102, 320))
-
-        Defesa_value = font_atribute_value.render("100", True, (0,0,0))
-        screen.blit(Defesa_value, (170, 320))
-
-        Agility_text = font_atribute_name.render("Agility:", True, (0,0,0))
-        screen.blit(Agility_text, (102, 360))
-
-        Agility_value = font_atribute_value.render("100", True, (0,0,0))
-        screen.blit(Agility_value, (170, 360))
-
-        intelligence_text = font_atribute_name.render("Intelligence:", True, (0,0,0))
-        screen.blit(intelligence_text, (102, 400))
-
-        intelligence_value = font_atribute_value.render("100", True, (0,0,0))
-        screen.blit(intelligence_value, (210, 400))
-
-        # Fim
-
-        # Detalhes da classe
-
-        class_name_text = font_atribute_name.render("Class Name:", True, (0,0,0))
-        screen.blit(class_name_text, (300, 160))
-
-        class_name_value = font_atribute_value.render("Warrior", True, (0,0,0))
-        screen.blit(class_name_value, (430, 160))
-
-        class_weapon_text = font_atribute_name.render("Starting Weapon:", True, (0,0,0))
-        screen.blit(class_weapon_text, (310, 200))
-
-        class_weapon_value = font_atribute_value.render("Sword", True, (0,0,0))
-        screen.blit(class_weapon_value, (490, 200))
-
-        # fim
-
-
-        font_title = pygame.font.Font(r"Game\Assets\Font\Adventurer.ttf", 50)
-        title_text = font_title.render("Character Race", True, (0, 0, 0))
-        screen.blit(title_text, (240, 85))
-
-        Continue_button = Button(540, 480, 180, 50, "Continue", (210, 170, 140))
-        Back_button = Button(80, 480, 180, 50, "Back", (210, 170, 140))
-
-        Continue_button.draw(screen)
-        Back_button.draw(screen)
-
-
-
-
-        for event in pygame.event.get():
-               
-               if event.type == pygame.QUIT:
-                      pygame.quit()
-
-               if event.type == pygame.MOUSEBUTTONDOWN:         
-                      
-                      if Back_button.is_clicked(event):
-                             return 2
-                      
-                      if Continue_button.is_clicked(event):
-                             return 3
-                             
-        return "Lorem Ipsun"
+        except Exception:
+                return 'Game\Assets\Sprites\Characters\Mage\Mage_SpriteSheet.png'
                 
-        
+
 
 
 

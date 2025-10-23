@@ -7,32 +7,66 @@ Base = declarative_base()
 
 #Tabelas do banco de dados
 
+class quest_personagem(Base):
+    #Table associativa para o relacionamento muitos-para-muitos entre Personagem e Quest
+    __tablename__ = "quest_personagem"
+
+    id_Quest_Personagem = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    personagem_id = Column(Integer, ForeignKey("personagem.id_Personagem"))
+    quest_id = Column(Integer, ForeignKey("quest.id_Quest"))
+    quest_status = Column(String, nullable=False)  # Ativa, Completa, Falhada
+
+    personagem = relationship("personagem", back_populates="personagem_quest")
+    quest = relationship("quest", back_populates="quest_personagem")
+
+
+from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, JSON
+
+Base = declarative_base()
+
 class personagem(Base):
-    __tablename__ = "personagens"
+    __tablename__ = "personagem"
 
-    #Atributos base
     id_Personagem = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    name = Column(String, unique=True, nullable=False)
-    #idade = Column(Integer, nullable=False)
-    #genero = Column(String, nullable=False)
-    #perks = Column(JSON) # Lista em formato nome : Beneficio
-    #customizacao = Column(JSON)  # Exemplo: {"cabelo": "curto", etc} 
+    username = Column(String, unique=True, nullable=False)  # login
+    password = Column(String, nullable=False)  # senha
 
-    # Relacionamentos 
-    id_conta = Column(Integer, ForeignKey("conta.id_Conta"))
-    conta = relationship("conta", back_populates="personagens")
+    x = Column(Float, nullable = True, default = 810)
+    y = Column(Float, nullable = True, default = 800)
 
-    # id_trabalho = Column(Integer, ForeignKey("Trabalho.id_Trabalho"))
-    # trabalho = relationship("Trabalho")
+    sprite_path = Column(String, nullable=False)
 
+    # idade = Column(Integer, nullable=True)
+    # genero = Column(String, nullable=True)
+    # perks = Column(JSON)  # Lista em formato nome:beneficio
+    # customizacao = Column(JSON)  # Exemplo: {"cabelo": "curto", etc}
+
+    # Classe do personagem
+    id_classe = Column(Integer, ForeignKey("classe.id_Classe"))
+    classe = relationship("classe", back_populates="personagem")
+
+    # Status do personagem (um-para-um)
     status = relationship("status", uselist=False, back_populates="personagem")
 
-    id_classe = Column(Integer, ForeignKey("classe.id_Classe"))
-    classe = relationship("classe", back_populates="personagens")
-
+    # Inventário (um-para-um)
     inventory = relationship("inventory", uselist=False, back_populates="personagem")
 
-    quests = relationship("quest", secondary="quest_personagem", back_populates="personagens")
+    # Quests do personagem
+    personagem_quest = relationship("quest_personagem", back_populates="personagem")
+
+
+class quest_personagem(Base):
+    #Table associativa para o relacionamento muitos-para-muitos entre Personagem e Quest
+    __tablename__ = "quest_personagem"
+
+    id_Quest_Personagem = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    personagem_id = Column(Integer, ForeignKey("personagem.id_Personagem"))
+    quest_id = Column(Integer, ForeignKey("quest.id_Quest"))
+    quest_status = Column(String, nullable=False)  # Ativa, Completa, Falhada
+
+    personagem = relationship("personagem", back_populates="personagem_quest")
+    quest = relationship("quest", back_populates="quest_personagem")
 
 class inventory(Base):
     __tablename__ = "inventory"
@@ -40,10 +74,10 @@ class inventory(Base):
     id_Inventory = Column(Integer, primary_key=True, index=True, autoincrement=True)
     items = Column(JSON)  # Dicionario de itens no inventario em formato nome : quantidade
 
-    personagem_id = Column(Integer, ForeignKey("personagens.id_Personagem"))
+    personagem_id = Column(Integer, ForeignKey("personagem.id_Personagem"))
     personagem = relationship("personagem", back_populates="inventory")
 
-    pages = relationship("inventory_page", back_populates="inventory")
+    inventory_page = relationship("inventory_page", back_populates="inventory")
 
 class inventory_page(Base):
     __tablename__ = "inventory_page"
@@ -81,7 +115,7 @@ class status(Base):
     
     # Relacionamento um-para-um com Personagem
 
-    personagem_id = Column(Integer, ForeignKey("personagens.id_Personagem"))
+    personagem_id = Column(Integer, ForeignKey("personagem.id_Personagem"))
     personagem = relationship("personagem", back_populates="status")
 
     monster = relationship("monster", uselist=False, back_populates="status")
@@ -96,15 +130,6 @@ class status(Base):
 #     descricao = Column(String, nullable=False)
 #     requisitos = Column(JSON)
 
-class conta(Base):
-    __tablename__ = "conta"
-
-    id_Conta = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    username = Column(String, unique=True, nullable=False)
-    password = Column(String, nullable=False)
-    # email = Column(String, unique=True, nullable=False)
-    personagens = relationship("personagem", back_populates="conta")
-
 class quest(Base):
     __tablename__ = "quest"
 
@@ -116,19 +141,8 @@ class quest(Base):
     is_repeatable = Column(Boolean, default=False)
     Tipo = Column(String, nullable=False)  # Principal, Secundaria, etc
 
-    personagens = relationship("quest_personagem", back_populates="quest")
+    quest_personagem = relationship("quest_personagem", back_populates="quest")
 
-class quest_personagem(Base):
-    #Table associativa para o relacionamento muitos-para-muitos entre Personagem e Quest
-    __tablename__ = "quest_personagem"
-
-    id_Quest_Personagem = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    personagem_id = Column(Integer, ForeignKey("personagens.id_Personagem"))
-    quest_id = Column(Integer, ForeignKey("quest.id_Quest"))
-    quest_status = Column(String, nullable=False)  # Ativa, Completa, Falhada
-
-    personagem = relationship("Personagem", back_populates="quests")
-    quest = relationship("quest", back_populates="personagens")
 
 class npc(Base):
     __tablename__ = "npc"
@@ -151,7 +165,7 @@ class classe(Base):
     #debuffs = Column(JSON)  # Debuffs passivos da classe
     #requisitos = Column(JSON)  # Requisitos para escolher a classe, exemplo: {"level": 5, "strength": 15}
     
-    personagens = relationship("personagem", back_populates="classe")
+    personagem = relationship("personagem", back_populates="classe")
 
 class monster(Base):
     __tablename__ = "monster"
