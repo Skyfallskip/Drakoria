@@ -55,9 +55,6 @@ while running:
     if game_state == STATE_MAIN_MENU: 
         start_btn, settings_btn, exit_btn = Main_Menu(screen, screen_width, screen_height)
         play_music(str(game_state))
-        
-
-
    
     elif game_state == STATE_GAME_RUNNING:
         keys = pygame.key.get_pressed()
@@ -107,11 +104,6 @@ while running:
                     camera = Camera(screen_width, screen_height, 0, 0)
                     game_state = STATE_GAME_RUNNING
          
-
-
-
-
-
     # -------------------------------------------------
 
 
@@ -197,8 +189,10 @@ while running:
 
 
 
+    # -------------------------------------------------
+    # --------------- Eventos -------------------------
+    # -------------------------------------------------
 
-    # --------------- Eventos ----------------
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -213,10 +207,7 @@ while running:
 
             elif exit_btn.is_clicked(event):
                 running = False
-
-        # Eventos durante o jogo
         
-        #Funciona com sorte e com magica
         elif game_state == STATE_GAME_RUNNING:
                 
                 sidebar_x = 22

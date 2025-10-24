@@ -9,10 +9,6 @@ images = {
     "hotbar_holder": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Hot_Bar", "Item_Frame_Holder_Hot_Bar1.png")),
     "hotbar_item": pygame.image.load(os.path.join(ui_path,'UIs','UI_Game', "Hot_Bar", "Item_Frame_Hot_Bar1.png")),
 
-    #minimap
-    "minimap_layer1": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Mini_Map", "Layer_1.png")),
-    "minimap_layer2": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Mini_Map", "Layer_2.png")),
-
     #Side menu
     "backpack_slot": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Side_Bar", "BackPack_Slot.png")), # Tornar um botao
     "gear_slot": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Side_Bar", "Gear_Slot.png")), # Tornar um botao
@@ -28,8 +24,6 @@ images = {
     "level_frame": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Profile", "Level_Frame.png")), # AUMENTAR IMAGEM
     "level_bg": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Profile", "Level_Frame_Background.png")), # AUMENTAR IMAGEM
     "level_number": pygame.image.load(os.path.join(ui_path,'UIs','UI_Game', "Profile", "Level_Number.png")), # AUMENTAR IMAGEM
-
-
 
 
     }
@@ -74,16 +68,6 @@ def draw_game_ui(screen, width, height):
     screen.blit(images["backpack_slot"], (sidebar_x, sidebar_y))
     screen.blit(images["gear_slot"], (sidebar_x, sidebar_y + 70))
     screen.blit(images["quest_scroll"], (sidebar_x, sidebar_y + 140))
-
-    # Mini mapa (topo direito)
-    minimap_x = width - images["minimap_layer1"].get_width() - 20
-    minimap_y = 20
-    screen.blit(images["minimap_layer1"], (minimap_x, minimap_y))
-    screen.blit(images["minimap_layer2"], (minimap_x, minimap_y))
-
-    mini_map_font = pygame.font.Font("Game/Assets/Font/Adventurer.ttf", 18)
-    mini_map_text = mini_map_font.render("Mini Mapa", True, (0, 0, 0))
-    screen.blit(mini_map_text, (minimap_x + 10, minimap_y + 10))
 
     # Hotbar (centro inferior)
     hotbar_y = height - images["hotbar_holder"].get_height() - 20

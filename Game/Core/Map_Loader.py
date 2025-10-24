@@ -46,7 +46,7 @@ def load_world_maps(world_file):
                                 32,
                                 32
                             )
-                            pygame.draw.rect(tmx_data.get_tile_image_by_gid(gid), (255, 0, 0), rect, 1)  # Debug: desenha o retângulo
+                            pygame.draw.rect(tmx_data.get_tile_image_by_gid(gid), (255, 0, 0), rect, 1)  # Debug desenha o retângulo
 
                             collision_rects.append(rect)
 

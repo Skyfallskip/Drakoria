@@ -1,8 +1,6 @@
 import pygame
 import pytmx
 
-
-
 #Renderiza os mapas na tela
 def render_maps(screen, maps, camera):
     for m in maps[0]:
