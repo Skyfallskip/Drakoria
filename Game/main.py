@@ -218,22 +218,23 @@ while running:
                 sidebar_width = 50   # largura do item
                 sidebar_height = 55  # altura do item
 
-                        #pygame.draw.rect(screen,BLACK,(20,340,50,55)) # debug (x,y,width,height)
-                if (sidebar_x <= mouse_pos[0] <= sidebar_x + sidebar_width and
-                            sidebar_y <= mouse_pos[1] <= sidebar_y + sidebar_height):
-                            print("Clicou na mochila")
-                            game_state = STATE_INVENTORY_OPEN
-                            
+                if event.type == pygame.MOUSEBUTTONDOWN:
 
-                elif (sidebar_x <= mouse_pos[0] <= sidebar_x + sidebar_width and
-                            (sidebar_y + sidebar_height) + 15 <= mouse_pos[1] <= sidebar_y + sidebar_height * 2):
-                            game_state = STATE_CONFIG
-                            print("Clicou nas configurações")
+                    #pygame.draw.rect(screen,BLACK,(20,340,50,55)) # debug (x,y,width,height)
+                    if (sidebar_x <= mouse_pos[0] <= sidebar_x + sidebar_width and
+                                sidebar_y <= mouse_pos[1] <= sidebar_y + sidebar_height):
+                                print("Clicou na mochila")
+                                game_state = STATE_INVENTORY_OPEN   
 
-                elif (sidebar_x <= mouse_pos[0] <= sidebar_x + sidebar_width and
-                            (sidebar_y + sidebar_height * 2) + 30 <= mouse_pos[1] <= (sidebar_y + sidebar_height * 3) + 30):
-                            game_state = STATE_QUESTS_VIEW
-                            print("Clicou nas quests")
+                    elif (sidebar_x <= mouse_pos[0] <= sidebar_x + sidebar_width and
+                                (sidebar_y + sidebar_height) + 15 <= mouse_pos[1] <= sidebar_y + sidebar_height * 2):
+                                game_state = STATE_CONFIG
+                                print("Clicou nas configurações")
+
+                    elif (sidebar_x <= mouse_pos[0] <= sidebar_x + sidebar_width and
+                                (sidebar_y + sidebar_height * 2) + 30 <= mouse_pos[1] <= (sidebar_y + sidebar_height * 3) + 30):
+                                game_state = STATE_QUESTS_VIEW
+                                print("Clicou nas quests")
             
 
                  
