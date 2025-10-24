@@ -3,6 +3,8 @@ from Core.Map_Renderer import render_maps
 from Core.UIs_Handler import draw_game_ui
 from Core.Buttons_Logic import Button
 from Core.Map_Loader import load_world_maps
+from database.session import SessionLocal
+from database.Services import crud
 
 
 pygame.font.init()
@@ -466,9 +468,10 @@ def Main_Menu_Settings_View():
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------
 
+username_text = ''
+password_text = ''
 
-
-def Account_Menu_View(screen,maps):
+def Account_Menu_View(screen):
     pygame.font.init()
     clock = pygame.time.Clock()
 
@@ -501,8 +504,8 @@ def Account_Menu_View(screen,maps):
     username_rect = pygame.Rect(90, 190, 630, 48)
     password_rect = pygame.Rect(90, 300, 630, 48)
 
-    username_text = ""
-    password_text = ""
+    global username_text
+    global password_text
     active_input = None
     cursor_visible = True
     cursor_timer = 0
@@ -565,8 +568,6 @@ def Account_Menu_View(screen,maps):
 
                 if login_button.is_clicked(event):
                         if username_text and password_text:
-                                maps = load_world_maps(r"Tiled_Map_Editor_Stuff\World\Zones.world")
-                                print("Loaded maps:", len(maps))
                                 print(f"Username: {username_text}, Password: {password_text}")
 
                                 return 3
@@ -601,10 +602,8 @@ def Account_Menu_View(screen,maps):
                         password_text = password_text[:-1]
                     elif event.key == pygame.K_RETURN:
                         print("Submitting login...")
-                        maps = load_world_maps(r"Tiled_Map_Editor_Stuff\World\Zones.world")
-                        print("Loaded maps:", len(maps))
                         print(f"Username: {username_text}, Password: {password_text}")
-                        return [3,maps]
+                        return 3
                     else:
                         if len(password_text) < 30:
                             password_text += event.unicode
@@ -730,9 +729,9 @@ def Character_Selection_View(screen, mouse_pos):
 
                         if Continue_button.is_clicked(event) and selected_class:
                                 print(selected_class)
-                                global username_text, password_text
                                 spritepath = Sprite_Chooser(selected_class)
                                 with SessionLocal() as db:
+                                        global username_text, password_text
                                         success, msg = crud.create_account(db, username_text, password_text,spritepath)
 
                                         print(msg)

@@ -5,6 +5,7 @@ from Core.Camera_Handler import Camera
 from Core.Movement_Handler import handle_player_movement, Collision_Handler
 from Core.Music_Handler import play_music, stop_music
 from Core.Music_Handler import play_music, stop_music
+from database.Services import crud
 
 
 # Inicializa os modules
@@ -75,9 +76,10 @@ while running:
     # -------------------------------------------------
     
     elif game_state == STATE_ACCOUNT_MENU:
-        Current_State = Account_Menu_View(screen, mouse_pos,map)
+        Current_State = Account_Menu_View(screen)
 
         if Current_State == STATE_GAME_RUNNING:
+
             game_state = STATE_GAME_RUNNING
         
         elif Current_State == STATE_MAIN_MENU:
@@ -99,6 +101,7 @@ while running:
             game_state = STATE_ACCOUNT_MENU
         
         elif Current_State == STATE_GAME_RUNNING:
+                    # Puxar o sprite e definir o player pelo crud
                     player_sprite = Sprite_Chooser(selected_class)
                     player = Player(820, 800, player_sprite)
                     camera = Camera(screen_width, screen_height, 0, 0)
