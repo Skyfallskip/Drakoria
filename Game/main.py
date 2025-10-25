@@ -3,6 +3,7 @@ from Core.Views import *
 from Core.Player_Handler import Player
 from Core.Camera_Handler import Camera
 from Core.Movement_Handler import handle_player_movement, Collision_Handler
+from Core.Map_Loader import *
 from Core.Music_Handler import play_music, stop_music
 from Core.Music_Handler import play_music, stop_music
 from database.Services import crud
@@ -92,7 +93,7 @@ while running:
 
     
     elif game_state == STATE_CHARACTER_SELECTION:
-        Current_State = Character_Selection_View(screen,mouse_pos)
+        Current_State, sprite_info = Character_Selection_View(screen,mouse_pos)
         stop_music()
 
 
@@ -101,12 +102,15 @@ while running:
             game_state = STATE_ACCOUNT_MENU
         
         elif Current_State == STATE_GAME_RUNNING:
-                    # Puxar o sprite e definir o player pelo crud
-                    player_sprite = Sprite_Chooser(selected_class)
-                    player = Player(820, 800, player_sprite)
-                    camera = Camera(screen_width, screen_height, 0, 0)
-                    game_state = STATE_GAME_RUNNING
-         
+            
+            if sprite_info:
+                print("---------------------")
+                print(sprite_info)
+                print("---------------------")
+
+                player = Player(820, 800, sprite_info)
+                camera = Camera(screen_width, screen_height, 0, 0)
+                game_state = STATE_GAME_RUNNING
     # -------------------------------------------------
 
 

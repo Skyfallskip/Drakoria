@@ -2,7 +2,6 @@ import pygame
 from Core.Map_Renderer import render_maps
 from Core.UIs_Handler import draw_game_ui
 from Core.Buttons_Logic import Button
-from Core.Map_Loader import load_world_maps
 from database.session import SessionLocal
 from database.Services import crud
 
@@ -725,20 +724,24 @@ def Character_Selection_View(screen, mouse_pos):
                                 print("Clicou em Unknown")
                         
                         if Back_button.is_clicked(event):
-                               return 1
+                               return 1, None
 
                         if Continue_button.is_clicked(event) and selected_class:
                                 print(selected_class)
+
                                 spritepath = Sprite_Chooser(selected_class)
+
                                 with SessionLocal() as db:
                                         global username_text, password_text
                                         success, msg = crud.create_account(db, username_text, password_text,spritepath)
 
                                         print(msg)
                                         if success:
-                                                return 3,selected_class
+                                                return 3,spritepath
                                         else:
-                                                return msg,None
+
+                                                print(f"Error creating account: {msg}")
+                                                return None,spritepath
 
                         elif Continue_button.is_clicked(event) and selected_class == None:
                                 print(selected_class)
@@ -764,21 +767,33 @@ def Character_Selection_View(screen, mouse_pos):
 
 
 def Sprite_Chooser(selected_class):
+    """
+    Returns the sprite path based on the selected character class
+    """
+    class_sprites = {
+        "Warrior": r"Game\Assets\Sprites\Characters\Warrior\Warrior_Sprite_Sheet.png",
+        "Mage": r"Game\Assets\Sprites\Characters\Mage\Mage_SpriteSheet.png",
+        #"Archer": r"Game\Assets\Sprites\Characters\Archer\Archer_SpriteSheet.png",
+        #"Assassin": r"Game\Assets\Sprites\Characters\Assassin\Assassin_SpriteSheet.png",
+        #"Priest": r"Game\Assets\Sprites\Characters\Priest\Priest_SpriteSheet.png",
+    }
 
-        class_sprites = {
-                "Warrior" : "Game\Assets\Sprites\Characters\Warrior\Warrior_Sprite_Sheet.png",
-                "Mage" : "Game\Assets\Sprites\Characters\Mage\Mage_SpriteSheet.png"
-        }
-
-        try:
-                if selected_class in class_sprites:
-                        return class_sprites[selected_class]
-                else:
-                        print("Não tem Sprite")
-                        raise Exception
-
-        except Exception:
-                return 'Game\Assets\Sprites\Characters\Mage\Mage_SpriteSheet.png'
+    try:
+        if selected_class in class_sprites:
+            sprite_path = class_sprites[selected_class]
+            try:
+                pygame.image.load(sprite_path)
+                return sprite_path
+            except pygame.error:
+                print(f"Warning: Sprite file not found: {sprite_path}")
+                return class_sprites["Mage"]
+        else:
+            print(f"Warning: No sprite defined for class: {selected_class}")
+            return class_sprites["Mage"]
+            
+    except Exception as e:
+        print(f"Error in Sprite_Chooser: {e}")
+        return class_sprites["Mage"]
                 
 
 
