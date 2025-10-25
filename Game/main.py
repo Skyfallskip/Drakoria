@@ -61,6 +61,8 @@ while running:
     elif game_state == STATE_GAME_RUNNING:
         keys = pygame.key.get_pressed()
         stop_music()
+        play_music(str(game_state))
+
 
         # Only query database if we have a username and haven't gotten player_id yet
         if username_text and current_player_id is None:
