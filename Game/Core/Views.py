@@ -809,8 +809,15 @@ def get_id():
         with SessionLocal() as db:
                 id = crud.get_id_Personagem_from_name(db, username_text) 
                 return id     
+font_fps = pygame.font.Font(r"Game\Assets\Font\Adventurer.ttf",24)
 
-
+def draw_fps(screen, clock):
+    fps = int(clock.get_fps())
+    fps_text = f"FPS: {fps}"
+    fps_surface = font_fps.render(fps_text, True, (255, 255, 255))  # White color
+    fps_rect = fps_surface.get_rect()
+    fps_rect.topright = (800 - 10, 10)  # Top right corner with 10px padding
+    screen.blit(fps_surface, fps_rect)
 
 
 

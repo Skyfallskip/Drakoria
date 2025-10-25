@@ -6,7 +6,7 @@ DATABASE_URL = "sqlite:///drakoria.db"
 
 engine = create_engine(
     DATABASE_URL, 
-    echo=True,       
+    echo=False,       
     future=True
 )
 

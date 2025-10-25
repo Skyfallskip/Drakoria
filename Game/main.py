@@ -81,6 +81,7 @@ while running:
         Collision_Handler(player, maps, dx, dy, screen, camera)
         camera.update(player)
         player.draw(screen, camera)
+        draw_fps(screen, clock)
 
     elif game_state == STATE_ACCOUNT_MENU:
         Current_State, sprite_info, account_username = Account_Menu_View(screen)
@@ -229,6 +230,6 @@ while running:
                     print("Clicou nas quests")
 
     pygame.display.flip()
-    clock.tick(60)  # Limita a 60 FPS
+    clock.tick(75)
 
 pygame.quit()
