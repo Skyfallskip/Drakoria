@@ -1,25 +1,30 @@
 import pygame
 
 def handle_player_movement(player, keys, dt):
+
     dx, dy = 0, 0
+
+    is_running = keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]
+    movement_speed = player.speed + 4 if is_running else player.speed
 
     moved = False
     if keys[pygame.K_a]:
-        dx -= player.speed
+        dx -= movement_speed
         player.current_row = 3  # left
         moved = True
     elif keys[pygame.K_d]:
-        dx += player.speed
+        dx += movement_speed
         player.current_row = 2  # right
         moved = True
     elif keys[pygame.K_w]:
-        dy -= player.speed
+        dy -= movement_speed
         player.current_row = 1  # up
         moved = True
     elif keys[pygame.K_s]:
-        dy += player.speed
+        dy += movement_speed
         player.current_row = 0  # down
         moved = True
+
     if moved:
         player.animation_timer += dt
         if player.animation_timer >= player.animation_speed:
