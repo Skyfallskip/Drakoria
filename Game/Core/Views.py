@@ -87,7 +87,7 @@ slot_xx = 0
 hotbar_y = 515
 hotbar_x = 120
 
-def Game_View(screen, width, height, maps, camera):
+def Game_View(screen, width, height, maps, camera, player_id):
         global selected_slot, slot_xx,hotbar_x,hotbar_y
         selected_slot_highlight = pygame.image.load(r"Game\Assets\UIs\UI_Game\Hot_Bar\Selected_Item_Hot_Bar.png")
 
@@ -95,7 +95,9 @@ def Game_View(screen, width, height, maps, camera):
         render_maps(screen, maps, camera)
 
         # Desenha a UI do jogo
-        draw_game_ui(screen, width, height)
+        with SessionLocal() as db:
+                draw_game_ui(screen, width, height, db, player_id)
+
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                        pygame.quit()
@@ -467,8 +469,8 @@ def Main_Menu_Settings_View():
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------
 
-username_text = ''
-password_text = ''
+username_text = ""
+password_text = ""
 
 def Account_Menu_View(screen):
     pygame.font.init()
@@ -489,13 +491,12 @@ def Account_Menu_View(screen):
     font_label = pygame.font.Font(r"Game\Assets\Font\Adventurer.ttf", 40)
     font_input = pygame.font.Font(r"Game\Assets\Font\Adventurer.ttf", 35)
     font_forgot = pygame.font.Font(r"Game\Assets\Font\Adventurer.ttf", 18)
+    font_error = pygame.font.Font(r"Game\Assets\Font\Adventurer.ttf", 20)
 
     title_text = font_title.render("Account Center", True, (0, 0, 0))
     screen.blit(title_text, (240, 85))
     screen.blit(font_label.render("Username", True, (0, 0, 0)), (110, 150))
     screen.blit(font_label.render("Password", True, (0, 0, 0)), (110, 260))
-
-    #nao irei implementar nunca. Nem morto
 
     screen.blit(font_forgot.render("Esqueceu a Senha", True, (40, 30, 20)), (530, 360))
 
@@ -503,11 +504,13 @@ def Account_Menu_View(screen):
     username_rect = pygame.Rect(90, 190, 630, 48)
     password_rect = pygame.Rect(90, 300, 630, 48)
 
-    global username_text
-    global password_text
+    global username_text, password_text
+    local_username = username_text
     active_input = None
     cursor_visible = True
     cursor_timer = 0
+    error_message = ""
+    show_error = False
 
     # Botoes
     login_button = Button(80, 430, 186, 76, "Log in", (210, 170, 140))
@@ -523,15 +526,20 @@ def Account_Menu_View(screen):
         screen.blit(font_label.render("Password", True, (0, 0, 0)), (110, 260))
         screen.blit(font_forgot.render("Esqueceu a Senha", True, (40, 30, 20)), (530, 360))
 
+        # Show error message if any
+        if show_error:
+            error_surface = font_error.render(error_message, True, (200, 0, 0))
+            screen.blit(error_surface, (250, 400))
+
         pygame.draw.rect(screen, (230, 216, 195, 10), username_rect, 0, 25)
         pygame.draw.rect(screen, (230, 216, 195, 10), password_rect, 0, 25)
 
-        if not username_text and active_input != "username":
+        if not local_username and active_input != "username":
             screen.blit(font_input.render("Digite aqui", True, (90, 80, 70)), (120, 195))
         if not password_text and active_input != "password":
             screen.blit(font_input.render("Digite aqui", True, (90, 80, 70)), (120, 305))
 
-        username_surface = font_input.render(username_text, True, (0, 0, 0))
+        username_surface = font_input.render(local_username, True, (0, 0, 0))
         password_surface = font_input.render("*" * len(password_text), True, (0, 0, 0))
 
         screen.blit(username_surface, (120, 195))
@@ -543,7 +551,7 @@ def Account_Menu_View(screen):
             cursor_visible = not cursor_visible
 
         if cursor_visible and active_input:
-            cursor_x = 120 + font_input.size(username_text if active_input == "username" else "*" * len(password_text))[0] + 5
+            cursor_x = 120 + font_input.size(local_username if active_input == "username" else "*" * len(password_text))[0] + 5
             cursor_y = 195 if active_input == "username" else 305
             pygame.draw.line(screen, (0, 0, 0), (cursor_x, cursor_y), (cursor_x, cursor_y + 40), 2)
 
@@ -554,62 +562,100 @@ def Account_Menu_View(screen):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+                return 0, None, None
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if username_rect.collidepoint(event.pos):
                     active_input = "username"
+                    show_error = False 
                 elif password_rect.collidepoint(event.pos):
                     active_input = "password"
+                    show_error = False 
                 else:
                     active_input = None
 
-                # Se estiver logado e usuario ja existir entra direto no map
-
                 if login_button.is_clicked(event):
-                        if username_text and password_text:
-                                print(f"Username: {username_text}, Password: {password_text}")
+                    if local_username and password_text:
+                        print(f"Attempting login: {local_username}")
+                        with SessionLocal() as db:   
+                            personagem, msg = crud.login_personagem(db, local_username, password_text)
 
-                                return 3
-                        print("Login clicked")
-                        
-                
-                elif login_button.is_clicked(event):
-                      print("Preencha todos os campos")
+                            if personagem:
+                                print(f"Login successful: {msg}")
+                                username_text = local_username
+                                return 3, personagem.sprite_path, local_username
+                            else:
+                                print(f"Login failed: {msg}")
+                                error_message = msg
+                                show_error = True
+                    else:
+                        error_message = "Preencha todos os campos!"
+                        show_error = True
 
-                # Se nao exister um usuario com esse username e senha e clicou em criar, pagina de escolher classe e rng da raça
+                elif create_button.is_clicked(event):
+                    if local_username and password_text:
+                        if len(local_username) < 3:
+                            error_message = "Username deve ter pelo menos 3 caracteres!"
+                            show_error = True
+                        elif len(password_text) < 4:
+                            error_message = "Password deve ter pelo menos 4 caracteres!"
+                            show_error = True
+                        else:
+                            with SessionLocal() as db:
+                                existing = crud.get_character_by_username(db, local_username)
+                                if existing:
+                                    error_message = "Username já existe!"
+                                    show_error = True
+                                else:
+                                    username_text = local_username
+                                    return 2, None, local_username
+                    else:
+                        error_message = "Preencha todos os campos!"
+                        show_error = True
 
-                elif create_button.is_clicked(event) and username_text and password_text:
-                        return 2
-
-                
                 elif back_button.is_clicked(event):
                     print("Back clicked")
-                    return 0
+                    # Clear password for security
+                    password_text = ""
+                    return 0, None, None
 
             if event.type == pygame.KEYDOWN:
                 if active_input == "username":
                     if event.key == pygame.K_BACKSPACE:
-                        username_text = username_text[:-1]
+                        local_username = local_username[:-1]
                     elif event.key == pygame.K_RETURN:
                         active_input = "password"
                     else:
-                        if len(username_text) < 30:
-                            username_text += event.unicode
+                        if len(local_username) < 30:
+                            local_username += event.unicode
+                    show_error = False
 
                 elif active_input == "password":
                     if event.key == pygame.K_BACKSPACE:
                         password_text = password_text[:-1]
                     elif event.key == pygame.K_RETURN:
-                        print("Submitting login...")
-                        print(f"Username: {username_text}, Password: {password_text}")
-                        return 3
+                        if local_username and password_text:
+                            print(f"Attempting login via Enter: {local_username}")
+                            with SessionLocal() as db:   
+                                personagem, msg = crud.login_personagem(db, local_username, password_text)
+                                if personagem:
+                                    username_text = local_username
+                                    return 3, personagem.sprite_path, local_username
+                                else:
+                                    error_message = msg
+                                    show_error = True
+                        else:
+                            error_message = "Preencha todos os campos!"
+                            show_error = True
                     else:
                         if len(password_text) < 30:
                             password_text += event.unicode
+                    show_error = False
 
         pygame.display.flip()
         clock.tick(60)
-
+    
+    return 0, None, None
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -619,151 +665,115 @@ selected_row = None
 selected_column = None
 
 def Character_Selection_View(screen, mouse_pos):
-        pygame.font.init()
+    pygame.font.init()
 
-        # --- BACKGROUND ---
+    # --- BACKGROUND ---
+    background = pygame.image.load(r"Game\Assets\Images\Main_Menu_Backgrond.png")
+    background = pygame.transform.scale(background, (800, 600))
+    screen.blit(background, (0, 0))
 
-        background = pygame.image.load(r"Game\Assets\Images\Main_Menu_Backgrond.png")
-        background = pygame.transform.scale(background, (800, 600))
-        screen.blit(background, (0, 0))
+    # Menu 
+    layer_1 = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Layer_1.png")
+    layer_1 = pygame.transform.scale(layer_1,(700,500))
+    screen.blit(layer_1,(50,50))
 
-        # Menu 
+    # Buttons
+    Continue_button = Button(540, 480, 180, 50, "Continue", (210, 170, 140))
+    Back_button = Button(80, 480, 180, 50, "Back", (210, 170, 140))
 
-        layer_1 = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Layer_1.png")
-        layer_1 = pygame.transform.scale(layer_1,(700,500))
-        screen.blit(layer_1,(50,50))
+    Continue_button.draw(screen)
+    Back_button.draw(screen)
 
-        # Buttons
+    # Eventos
+    global selected_class, selected_row, selected_column, highlighted, username_text, password_text
 
-        Continue_button = Button(540, 480, 180, 50, "Continue", (210, 170, 140))
-        Back_button = Button(80, 480, 180, 50, "Back", (210, 170, 140))
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            return 0, None, None
 
-        Continue_button.draw(screen)
-        Back_button.draw(screen)
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if mouse_pos[0] >= 140 and mouse_pos[0] <= 274 and mouse_pos[1] >= 77 and mouse_pos[1] <= 214:
+                print("Clicou em warrior")
+                selected_row = 1
+                selected_column = 1
+                selected_class = "Warrior"
+                highlighted = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Warrior.png")
+            
+            elif mouse_pos[0] >= 334 and mouse_pos[0] <= 466 and mouse_pos[1] >= 77 and mouse_pos[1] <= 214:
+                selected_column = 2
+                selected_row = 1
+                selected_class = "Mage"
+                highlighted = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Mage.png")
+                print("Clicou em mage")
+            
+            elif mouse_pos[0] >= 527 and mouse_pos[0] <= 661 and mouse_pos[1] >= 77 and mouse_pos[1] <= 214:
+                selected_row = 1
+                selected_class = "Archer"
+                selected_column = 3
+                highlighted = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Archer.png")
+                print("Clicou em archer")
 
+            elif mouse_pos[0] >= 140 and mouse_pos[0] <= 274 and mouse_pos[1] >= 237 and mouse_pos[1] <= 374:
+                selected_column = 1
+                selected_row = 0
+                selected_class = "Assassin"
+                highlighted = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Assassin.png")
+                print("Clicou em Assassin")
 
-        # Eventos
+            elif mouse_pos[0] >= 334 and mouse_pos[0] <= 466 and mouse_pos[1] >= 237 and mouse_pos[1] <= 374:
+                selected_row = 0
+                selected_column = 2
+                selected_class = "Priest"
+                highlighted = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Priest.png")
+                print("Clicou em Priest")
+            
+            elif mouse_pos[0] >= 527 and mouse_pos[0] <= 661 and mouse_pos[1] >= 237 and mouse_pos[1] <= 374:
+                selected_row = 0
+                selected_column = 3
+                selected_class = "None"
+                highlighted = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Unknown.png")
+                print("Clicou em Unknown")
+            
+            if Back_button.is_clicked(event):
+                password_text = ""
+                return 1, None, None
 
-        global selected_class, selected_row, selected_column, highlighted
+            if Continue_button.is_clicked(event):
+                if selected_class and selected_class != "None":
+                    print(f"Selected class: {selected_class}")
+                    spritepath = Sprite_Chooser(selected_class)
 
-        for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                      pygame.quit()
-
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                        #print(mouse_pos)
-                
-                        # Botoes de cada classe x,y
-
-                        # Width 135 Height 130
-
-                        # Warrior
-                                # x 140 - 274 y 77 - 214 Fixed for first row
-
-                        # Mage
-                                # x 334 - 466 y 77 - 214 Fixed for first row
-
-                        # Archer
-                                # x 527 - 661 y 77 - 214 Fixed for first row
-
-                        # Assassin
-                                # x 140 - 274 , Y 237 - 374 Fixed for second row
-
-                        # Priest        
-                                # x 334 - 468 , Y 237 - 374 Fixed for second row
-
-                        # Unknown
-                                # x 527 - 661 , Y 237 - 374 Fixed for second row
-
-                        #elif mouse_pos[0] >= 198 and mouse_pos[0] <= 426 and mouse_pos[1] >= 109 and mouse_pos[1] <= 139:
-                        if mouse_pos[0] >= 140 and mouse_pos[0] <= 274 and mouse_pos[1] >= 77 and mouse_pos[1] <= 214:
-                              #Colocoar um outline, salvar class selection como warrior... bla bla bla
-                                print("Clicou em warrior")
-                                selected_row = 1
-                                selected_column = 1
-                                selected_class = "Warrior"
-                                highlighted = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Warrior.png")
+                    with SessionLocal() as db:
+                        success, msg = crud.create_personagem(db, username_text, password_text, spritepath)
+                        print(msg)
                         
-                        elif mouse_pos[0] >= 334 and mouse_pos[0] <= 466 and mouse_pos[1] >= 77 and mouse_pos[1] <= 214:
-                                selected_column = 2
-                                selected_row = 1
-                                selected_class = "Mage"
-                                highlighted = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Mage.png")
+                        if success:
+                            temp_username = username_text
+                            password_text = ""
+                            return 3, spritepath, temp_username
+                        else:
+                            print(f"Error creating account: {msg}")
+                            return None, None, None
+                else:
+                    print("Escolha uma classe válida!")
 
-                                print("Clicou em mage")
-                        
-                        elif mouse_pos[0] >= 527 and mouse_pos[0] <= 661 and mouse_pos[1] >= 77 and mouse_pos[1] <= 214:
-                                selected_row = 1
-                                selected_class = "Archer"
-                                selected_column = 3
-                                highlighted = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Archer.png")
+    if selected_row is not None:
+        if selected_column == 1:
+            screen.blit(highlighted,(140,77))
+        elif selected_column == 2:
+            screen.blit(highlighted,(334,77))
+        elif selected_column == 3:
+            screen.blit(highlighted,(527,77))
+    elif selected_row == 0:
+        if selected_column == 1:
+            screen.blit(highlighted,(140,237))
+        elif selected_column == 2:
+            screen.blit(highlighted,(334,237))
+        elif selected_column == 3:
+            screen.blit(highlighted,(527,237))
 
-                                print("Clicou em archer")
-
-                        elif mouse_pos[0] >= 140 and mouse_pos[0] <= 274 and mouse_pos[1] >= 237 and mouse_pos[1] <= 374:
-                                selected_column = 1
-                                selected_row = 0
-                                selected_class = "Assassin"
-                                highlighted = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Assassin.png")
-
-                                print("Clicou em Assassin")
-
-                        elif mouse_pos[0] >= 334 and mouse_pos[0] <= 466 and mouse_pos[1] >= 237 and mouse_pos[1] <= 374:
-                                selected_row = 0
-                                selected_column = 2
-                                selected_class = "Priest"
-                                highlighted = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Priest.png")
-
-                                print("Clicou em Priest")
-                        
-                        elif mouse_pos[0] >= 527 and mouse_pos[0] <= 661 and mouse_pos[1] >= 237 and mouse_pos[1] <= 374:
-                                selected_row = 0
-                                selected_column = 3
-                                selected_class = "None"
-                                highlighted = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Selected_Unknown.png")
-                                print("Clicou em Unknown")
-                        
-                        if Back_button.is_clicked(event):
-                               return 1, None
-
-                        if Continue_button.is_clicked(event) and selected_class:
-                                print(selected_class)
-
-                                spritepath = Sprite_Chooser(selected_class)
-
-                                with SessionLocal() as db:
-                                        global username_text, password_text
-                                        success, msg = crud.create_account(db, username_text, password_text,spritepath)
-
-                                        print(msg)
-                                        if success:
-                                                return 3,spritepath
-                                        else:
-
-                                                print(f"Error creating account: {msg}")
-                                                return None,spritepath
-
-                        elif Continue_button.is_clicked(event) and selected_class == None:
-                                print(selected_class)
-                                print("Escholha uma classe")
-
-
-        if selected_row:
-                if selected_column == 1:
-                                screen.blit(highlighted,(140,77))
-                elif selected_column == 2:
-                                screen.blit(highlighted,(334,77))
-                elif selected_column == 3:
-                                screen.blit(highlighted,(527,77))
-        else:
-                if selected_column == 1:
-                                screen.blit(highlighted,(140,237))
-                elif selected_column == 2:
-                                screen.blit(highlighted,(334,237))
-                elif selected_column == 3:
-                                screen.blit(highlighted,(527,237))
-
-        return None, selected_class
+    return None, selected_class, None
 
 
 def Sprite_Chooser(selected_class):
@@ -773,9 +783,9 @@ def Sprite_Chooser(selected_class):
     class_sprites = {
         "Warrior": r"Game\Assets\Sprites\Characters\Warrior\Warrior_Sprite_Sheet.png",
         "Mage": r"Game\Assets\Sprites\Characters\Mage\Mage_SpriteSheet.png",
-        #"Archer": r"Game\Assets\Sprites\Characters\Archer\Archer_SpriteSheet.png",
-        #"Assassin": r"Game\Assets\Sprites\Characters\Assassin\Assassin_SpriteSheet.png",
-        #"Priest": r"Game\Assets\Sprites\Characters\Priest\Priest_SpriteSheet.png",
+        #"Archer": r"Game\Assets\Sprites\Characters\Archer\Archer_SpriteSheet.png",  # Add if you have this
+        #"Assassin": r"Game\Assets\Sprites\Characters\Assassin\Assassin_SpriteSheet.png",  # Add if you have this
+        #"Priest": r"Game\Assets\Sprites\Characters\Priest\Priest_SpriteSheet.png",  # Add if you have this
     }
 
     try:
@@ -795,6 +805,10 @@ def Sprite_Chooser(selected_class):
         print(f"Error in Sprite_Chooser: {e}")
         return class_sprites["Mage"]
                 
+def get_id():
+        with SessionLocal() as db:
+                id = crud.get_id_Personagem_from_name(db, username_text) 
+                return id     
 
 
 
