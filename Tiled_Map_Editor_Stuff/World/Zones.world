@@ -1,18 +1,32 @@
 {
     "maps": [
         {
-            "fileName": "../../../Drakoria/Tiled_Map_Editor_Stuff/Tilesets_tsx/Testing_World.tmx",
+            "fileName": "../Tilesets_tsx/Testing_World.tmx",
             "height": 1600,
             "width": 1600,
             "x": 0,
             "y": 0
         },
         {
-            "fileName": "../../../Drakoria/Tiled_Map_Editor_Stuff/Tilesets_tsx/Testing_World_2.tmx",
+            "fileName": "../Tilesets_tsx/Testing_World_2.tmx",
             "height": 1600,
             "width": 1600,
             "x": -1600,
             "y": 0
+        },
+        {
+            "fileName": "../Tilesets_tsx/Testing_World_3.tmx",
+            "height": 1600,
+            "width": 1600,
+            "x": 0,
+            "y": -1600
+        },
+        {
+            "fileName": "../Tilesets_tsx/Testing_World_4.tmx",
+            "height": 1600,
+            "width": 1600,
+            "x": -1600,
+            "y": -1600
         }
     ],
     "onlyShowAdjacentMaps": false,
