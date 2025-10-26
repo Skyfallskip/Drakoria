@@ -82,7 +82,7 @@ def Main_Menu(screen, width, height):
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------
 
-selected_slot = None
+selected_slot = 0
 slot_xx = 0
 hotbar_y = 515
 hotbar_x = 120
@@ -477,9 +477,21 @@ def Account_Menu_View(screen):
     clock = pygame.time.Clock()
 
     # --- BACKGROUND ---
-    background = pygame.image.load(r"Game\Assets\Images\Main_Menu_Backgrond.png")
-    background = pygame.transform.scale(background, (800, 600))
-    screen.blit(background, (0, 0))
+    layers = [
+                {"image": pygame.image.load(r"Game\Assets\Images\Main\version B\Layers\far-mountains.png").convert_alpha(), "speed": 0.1, "x": 0},
+                {"image": pygame.image.load(r"Game\Assets\Images\Main\version B\Layers\sky.png").convert_alpha(), "speed": 0.2, "x": 0},
+                {"image": pygame.image.load(r"Game\Assets\Images\Main\version B\Layers\middle-mountains.png").convert_alpha(), "speed": 0.4, "x": 0},
+                {"image": pygame.image.load(r"Game\Assets\Images\Main\version B\Layers\myst.png").convert_alpha(), "speed": 0.6, "x": 0},
+                {"image": pygame.image.load(r"Game\Assets\Images\Main\version B\Layers\far-trees.png").convert_alpha(), "speed": 0.8, "x": 0},
+                {"image": pygame.image.load(r"Game\Assets\Images\Main\version B\Layers\near-trees.png").convert_alpha(), "speed": 1.2, "x": 0},
+        ]
+
+    for layer in layers:
+                layer["image"] = pygame.transform.scale(layer["image"], (800, 600)).convert_alpha()
+        
+    for layer in layers:
+                screen.blit(layer["image"], (layer["x"], 0))
+                screen.blit(layer["image"], (layer["x"] + 600, 0))
 
     # Menu Principal
     layer_1 = pygame.image.load(r"Game\Assets\UIs\Account_Menu\Layer_1.png")
@@ -519,7 +531,6 @@ def Account_Menu_View(screen):
 
     running = True
     while running:
-        screen.blit(background, (0, 0))
         screen.blit(layer_1, (50, 50))
         screen.blit(title_text, (240, 85))
         screen.blit(font_label.render("Username", True, (0, 0, 0)), (110, 150))
@@ -668,9 +679,21 @@ def Character_Selection_View(screen, mouse_pos):
     pygame.font.init()
 
     # --- BACKGROUND ---
-    background = pygame.image.load(r"Game\Assets\Images\Main_Menu_Backgrond.png")
-    background = pygame.transform.scale(background, (800, 600))
-    screen.blit(background, (0, 0))
+    layers = [
+                {"image": pygame.image.load(r"Game\Assets\Images\Main\version B\Layers\far-mountains.png").convert_alpha(), "speed": 0.1, "x": 0},
+                {"image": pygame.image.load(r"Game\Assets\Images\Main\version B\Layers\sky.png").convert_alpha(), "speed": 0.2, "x": 0},
+                {"image": pygame.image.load(r"Game\Assets\Images\Main\version B\Layers\middle-mountains.png").convert_alpha(), "speed": 0.4, "x": 0},
+                {"image": pygame.image.load(r"Game\Assets\Images\Main\version B\Layers\myst.png").convert_alpha(), "speed": 0.6, "x": 0},
+                {"image": pygame.image.load(r"Game\Assets\Images\Main\version B\Layers\far-trees.png").convert_alpha(), "speed": 0.8, "x": 0},
+                {"image": pygame.image.load(r"Game\Assets\Images\Main\version B\Layers\near-trees.png").convert_alpha(), "speed": 1.2, "x": 0},
+        ]
+
+    for layer in layers:
+                layer["image"] = pygame.transform.scale(layer["image"], (800, 600)).convert_alpha()
+        
+    for layer in layers:
+                screen.blit(layer["image"], (layer["x"], 0))
+                screen.blit(layer["image"], (layer["x"] + 600, 0))
 
     # Menu 
     layer_1 = pygame.image.load(r"Game\Assets\UIs\Character_Selection\Layer_1.png")

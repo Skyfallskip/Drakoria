@@ -11,7 +11,6 @@ from database.Services import crud
 # Inicializa os modules
 pygame.init()
 pygame.mixer.init()
-menu_music_playing = False
 
 # Configura a tela
 screen_width = 800
@@ -25,7 +24,6 @@ GRAY = (128, 128, 128)
 STATE_MAIN_MENU = 0
 STATE_ACCOUNT_MENU = 1
 STATE_CHARACTER_SELECTION = 2
-STATE_CHARACTER_RACE = 2.5
 STATE_GAME_RUNNING = 3
 STATE_INVENTORY_OPEN = 4
 STATE_STATUS_VIEW = 5
@@ -64,17 +62,14 @@ while running:
         play_music(str(game_state))
 
 
-        # Only query database if we have a username and haven't gotten player_id yet
         if username_text and current_player_id is None:
             with SessionLocal() as db:
                 current_player_id = crud.get_id_Personagem_from_name(db, username_text)
                 print(f"Found player_id: {current_player_id} for username: {username_text}")
 
-        # Pass the current_player_id to Game_View
         if current_player_id:
             Game_View(screen, screen_width, screen_height, maps, camera, current_player_id)
         else:
-            # Fallback without player_id
             Game_View(screen, screen_width, screen_height, maps, camera, None)
             print("WARNING: No player_id available!")
 
@@ -89,12 +84,10 @@ while running:
         Current_State, sprite_info, account_username = Account_Menu_View(screen)
         
         if Current_State == STATE_GAME_RUNNING:
-            # Login successful - update player with the correct sprite
             if sprite_info and account_username:
                 player = Player(820, 800, sprite_info)
                 camera = Camera(screen_width, screen_height, 0, 0)
                 
-                # Update global username and get player_id
                 username_text = account_username
                 with SessionLocal() as db:
                     current_player_id = crud.get_id_Personagem_from_name(db, username_text)
@@ -123,7 +116,6 @@ while running:
                 player = Player(820, 800, sprite_info)
                 camera = Camera(screen_width, screen_height, 0, 0)
                 
-                # Update username_text and get player_id for the newly created character
                 username_text = new_username
                 with SessionLocal() as db:
                     current_player_id = crud.get_id_Personagem_from_name(db, username_text)
