@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import sessionmaker, scoped_session, declarative_base
-from models import *
+from database.models import *
 
 DATABASE_URL = "sqlite:///drakoria.db"  
 

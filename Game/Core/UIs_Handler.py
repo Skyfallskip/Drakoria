@@ -1,5 +1,6 @@
 import pygame
 import os
+from database.Services import crud
 
 ui_path = "Game/Assets/"
 # Carrega todas as imagens necessárias para a UI
@@ -10,9 +11,9 @@ images = {
     "hotbar_item": pygame.image.load(os.path.join(ui_path,'UIs','UI_Game', "Hot_Bar", "Item_Frame_Hot_Bar1.png")),
 
     #Side menu
-    "backpack_slot": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Side_Bar", "BackPack_Slot.png")), # Tornar um botao
-    "gear_slot": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Side_Bar", "Gear_Slot.png")), # Tornar um botao
-    "quest_scroll": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Side_Bar", "Quest_Scroll.png")), # Tornar um botao
+    "backpack_slot": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Side_Bar", "BackPack_Slot.png")),
+    "gear_slot": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Side_Bar", "Gear_Slot.png")),
+    "quest_scroll": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Side_Bar", "Quest_Scroll.png")),
     "gold_coin": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Side_Bar", "Gold_Coin.png")),
 
 
@@ -21,9 +22,9 @@ images = {
     "mana_bar": pygame.image.load(os.path.join(ui_path,'UIs','UI_Game', "Profile", "Mana_Bar.png")),
     "stamina_bar": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Profile", "Stamina_Bar.png")),
 
-    "level_frame": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Profile", "Level_Frame.png")), # AUMENTAR IMAGEM
-    "level_bg": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Profile", "Level_Frame_Background.png")), # AUMENTAR IMAGEM
-    "level_number": pygame.image.load(os.path.join(ui_path,'UIs','UI_Game', "Profile", "Level_Number.png")), # AUMENTAR IMAGEM
+    "level_frame": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Profile", "Level_Frame.png")), 
+    "level_bg": pygame.image.load(os.path.join(ui_path,'UIs', 'UI_Game', "Profile", "Level_Frame_Background.png")), 
+    "level_number": pygame.image.load(os.path.join(ui_path,'UIs','UI_Game', "Profile", "Level_Number.png")),
 
 
     }
@@ -38,7 +39,7 @@ profile_background = images['level_bg']
 profile_background = pygame.transform.scale(profile_background,(200,110))
 
 
-def draw_game_ui(screen, width, height):
+def draw_game_ui(screen, width, height, db, player_id):
     # Perfil do jogador (topo esquerdo)
     profile_x = 15
     profile_y = 30
@@ -49,9 +50,44 @@ def draw_game_ui(screen, width, height):
     # Barras ao lado
     bar_x = profile_x
     bar_y = profile_y
-    screen.blit(images["health_bar"], (bar_x, bar_y))
-    screen.blit(images["mana_bar"], (bar_x, bar_y))
-    screen.blit(images["stamina_bar"], (bar_x, bar_y))
+
+    health_percentage = 1.0
+    mana_percentage = 1.0
+    stamina_percentage = 1.0
+
+    if player_id:
+        status_info = crud.get_status_personagem(db, player_id)
+
+        if status_info:
+            # Calculate bar widths based on current values (assuming max is 100 for now)
+            health_percentage = status_info["current_health"] / status_info["max_health"]
+            mana_percentage = status_info["current_mana"] / status_info["max_mana"]
+            stamina_percentage = status_info["current_stamina"] / status_info["max_stamina"]
+
+        else:
+            print(f"No status info found for player_id: {player_id}")
+    
+    else:
+        print("No player_id provided, using default values")
+
+    max_health = 115
+    current_health = int(health_percentage * max_health)
+    health_bg_rect = pygame.Rect((bar_x + 78), (bar_y + 16), current_health, 20)
+    pygame.draw.rect(screen, (255, 0, 0), health_bg_rect)
+    screen.blit(images["health_bar"].convert_alpha(), (bar_x, bar_y))
+
+    max_mana = 89
+    current_mana = int(mana_percentage * max_mana)
+    mana_bg_rect = pygame.Rect((bar_x + 78), (bar_y + 42), current_mana, 18)
+    pygame.draw.rect(screen, (0, 0, 255), mana_bg_rect)
+    screen.blit(images["mana_bar"].convert_alpha(), (bar_x, bar_y))
+
+    max_stamina = 66
+    current_stamina = int(stamina_percentage * max_stamina)
+    stamina_bg_rect = pygame.Rect((bar_x + 78), (bar_y + 65), current_stamina, 17)
+    pygame.draw.rect(screen, (255, 255, 0), stamina_bg_rect)
+    screen.blit(images["stamina_bar"].convert_alpha(), (bar_x, bar_y))
+
 
     # Ouro (baixo do perfil)
     gold_x = 20
